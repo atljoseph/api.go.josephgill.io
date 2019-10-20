@@ -1,6 +1,6 @@
 
 # Start from the latest golang base image
-FROM golang:alpine as builder
+FROM golang:1.13-alpine as builder
 
 # Add Maintainer Info
 LABEL maintainer="Joseph Gill <joseph.gill.atlanta@gmail.com>"
@@ -11,11 +11,12 @@ RUN apk --update upgrade
 # enable usage of cgo
 # See http://stackoverflow.com/questions/34729748/installed-go-binary-not-found-in-path-on-alpine-linux-docker
 # RUN mkdir /lib64 && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
-RUN apk add gcc g++ 
-#--no-cache 
+# ENV PATH "/lib:$PATH"
+# RUN apk add --no-cache gcc g++ 
+RUN apk add --no-cache gcc musl-dev
 
 # add sqlite
-RUN apk add sqlite
+RUN apk add --no-cache sqlite
 
 # Set the Current Working Directory inside the container
 WORKDIR /app

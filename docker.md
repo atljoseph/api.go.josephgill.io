@@ -1,8 +1,13 @@
 
 # https://www.callicoder.com/docker-golang-image-container-example/
 
-docker build -t api.josephgill.io:latest .
-docker run --name api.josephgill.io --publish 8080:8080 -d --rm api.josephgill.io:latest
+## Trigger a Multi-stage Build, then cleanup the intermediate build image(s)
+docker build -t api.go.josephgill.io:latest .
+docker image prune --force
 
-docker kill api.josephgill.io
+## Run the final output image
+docker run --name api.go.josephgill.io --publish 8080:8080 -d --rm api.go.josephgill.io:latest
+
+# Kill the docker container
+docker kill api.go.josephgill.io
 
