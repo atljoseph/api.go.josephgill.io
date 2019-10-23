@@ -1,4 +1,4 @@
-package handlers
+package routeHandlers
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 
 // GetTestResponse is the response returned by GetTestHandler
 type GetTestResponse struct {
-	Message string `json:"message"`
+	Test string `json:"test"`
 }
 
 // GetTestPathParamHandler is just a test endpoint
@@ -26,7 +26,7 @@ func GetTestPathParamHandler(w http.ResponseWriter, r *http.Request) {
 
 	// respond
 	res := &GetTestResponse{}
-	res.Message = fmt.Sprintf("Hello, %s\n", mp[requester.TestNameKey])
+	res.Test = fmt.Sprintf("Hello, %s\n", mp[requester.TestNameKey])
 	responder.SendJSON(w, res)
 }
 
@@ -43,14 +43,14 @@ func GetTestQueryParamHandler(w http.ResponseWriter, r *http.Request) {
 
 	// respond
 	res := &GetTestResponse{}
-	res.Message = fmt.Sprintf("Hello, %s\n", pName.Value)
+	res.Test = fmt.Sprintf("Hello, %s\n", pName.Value)
 	responder.SendJSON(w, res)
 }
 
 // GetTestErrorHandler is just a test endpoint that returns an error
 func GetTestErrorHandler(w http.ResponseWriter, r *http.Request) {
-	errTag := "handlers.GetTestQueryParamHandler"
+	errTag := "handlers.GetTestErrorHandler"
 
-	responder.SendError(w, fmt.Errorf("%s: TEST", errTag).Error(), http.StatusBadRequest)
+	responder.SendJSONHttpError(w, http.StatusBadRequest, fmt.Errorf("%s: TEST", errTag).Error())
 	return
 }

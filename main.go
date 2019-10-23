@@ -1,21 +1,26 @@
 package main
 
 import (
-	"fmt"
-
+	"github.com/atljoseph/api.josephgill.io/photoDB"
 	"github.com/atljoseph/api.josephgill.io/routes"
 	"github.com/atljoseph/api.josephgill.io/server"
-	"github.com/atljoseph/api.josephgill.io/sqlite"
 )
 
 func main() {
 
-	// setup the database connection(s) - this is a singleton
-	_, err := sqlite.Connect("./i-love-nhung.db")
+	// TODO: DON'T PANIC
+
+	// setup the database connection(s) keychain, as a singleton
+	dbConfig := &photoDB.Config{
+		MaxOpenConns: 15,
+		ReplaceDB:    true,
+	}
+	err := photoDB.Initialize(dbConfig)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("connected")
+
+	// TODO: Write authDB and migration
 
 	// configure the routes
 	router, err := routes.Configure()

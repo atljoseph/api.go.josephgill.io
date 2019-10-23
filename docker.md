@@ -1,4 +1,6 @@
 
+# TODO: App able to write db within docker / volumes?
+
 # https://www.callicoder.com/docker-golang-image-container-example/
 
 ## Trigger a Multi-stage Build, then cleanup the intermediate build image(s)

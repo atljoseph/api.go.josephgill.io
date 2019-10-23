@@ -3,8 +3,8 @@ package routes
 import (
 	"fmt"
 
-	"github.com/atljoseph/api.josephgill.io/handlers"
 	"github.com/atljoseph/api.josephgill.io/requester"
+	handlers "github.com/atljoseph/api.josephgill.io/route-handlers"
 )
 
 func getRoutes() Routes {
@@ -34,10 +34,16 @@ func getRoutes() Routes {
 			HandlerFunc: handlers.GetPhotoAlbumsHandler,
 		},
 		Route{
-			Name:        "GetPhotoAlbum",
+			Name:        "GetPhotosByAlbumKey",
 			Method:      "GET",
 			Pattern:     fmt.Sprintf("%s/album/{%s}", BaseURL, requester.PhotoAlbumIDKey),
-			HandlerFunc: handlers.GetPhotoAlbumsHandler,
+			HandlerFunc: handlers.GetPhotosByAlbumKeyHandler,
+		},
+		Route{
+			Name:        "PostPhotosByAlbumKey",
+			Method:      "POST",
+			Pattern:     fmt.Sprintf("%s/album", BaseURL),
+			HandlerFunc: handlers.PostPhotoAlbumsHandler,
 		},
 	}
 }

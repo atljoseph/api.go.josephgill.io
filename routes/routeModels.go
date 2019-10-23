@@ -2,6 +2,8 @@ package routes
 
 import "net/http"
 
+// TODO: Implement JWT in DB and Route Handlers
+
 // Route is a struct representing a specific publicly-available route
 type Route struct {
 	Name        string

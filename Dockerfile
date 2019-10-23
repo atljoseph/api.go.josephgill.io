@@ -1,4 +1,6 @@
 
+# TODO: Dockerfile for prod
+
 # Start from the latest golang base image
 FROM golang:1.13-alpine as builder
 
@@ -18,6 +20,9 @@ RUN apk add --no-cache gcc musl-dev
 # add sqlite
 RUN apk add --no-cache sqlite
 
+# add bash et al
+RUN apk add --no-cache bash coreutils grep sed
+
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
@@ -34,7 +39,6 @@ COPY . .
 # Build the Go app
 RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o main .
 
-
 ######## Start a new stage from scratch #######
 FROM alpine:latest as final
 
@@ -46,17 +50,14 @@ WORKDIR /root/
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
 
-# Copy other important files
-# COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
-# COPY --from=builder /etc/ssl/certs/server.crt /etc/ssl/certs/
-# COPY --from=builder /etc/ssl/private/server.key /etc/ssl/private/
-# COPY --from=builder /app/https-server.key .
-# COPY --from=builder /app/https-server.crt .
-# https://github.com/denji/golang-tls
+# Copy in the database
+# TODO handle the database turnover better... can db be written to?
+COPY photos.db ./
 
-# Create an unprivileged user
-# Do not forget to chmod so no permission errors
+# Create an unprivileged user (order of operations matters)
 RUN adduser --disabled-password --gecos '' appuser
+
+# Do not forget to chmod so no permission errors
 RUN chmod 755 .
 
 # Use the unpriveleged user
