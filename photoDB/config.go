@@ -76,30 +76,11 @@ func (config *Config) MergeWithDefaults() *Config {
 func configDB(config *Config) (*sqlx.DB, error) {
 	errTag := "configDB"
 
-	// merge config with defaults
-	cx := config.MergeWithDefaults()
-
 	// open the dbx object
 	dbx, err := sqlx.Open(config.ConnType, config.ConnString)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %s", errTag, err)
 	}
-
-	// if dbx.
-	// // the problem of existance
-	// // only sqlite supported for now
-	// if strings.Contains(config.ConnType, "sqlite") {
-	// 	// provide a clean database on each run
-	// 	if config.ReplaceDB {
-	// 		os.Remove(config.ConnString)
-	// 	}
-
-	// 	// create the file if not exists
-	// 	_, err = os.Stat(config.ConnString)
-	// 	if os.IsNotExist(err) {
-	// 		dbx = sqlx.NewDb(dbx.DB, config.ConnType)
-	// 	}
-	// }
 
 	// ping the database
 	err = dbx.Ping()
@@ -111,13 +92,6 @@ func configDB(config *Config) (*sqlx.DB, error) {
 	dbx.SetMaxIdleConns(0)
 	dbx.SetMaxOpenConns(1)
 	dbx.SetConnMaxLifetime(time.Minute * time.Duration(config.ConnMaxLifetimeMinutes))
-
-	// apply migrations
-	err = migrateDB(dbx, cx)
-	if err != nil {
-		return nil, fmt.Errorf("%s: %s", errTag, err)
-	}
-	fmt.Printf("%s: %s", errTag, "Migrated")
 
 	return dbx, nil
 }

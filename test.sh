@@ -1,6 +1,10 @@
 
-echo '\ntest albums'
+echo '\nGET albums'
 curl --location --request GET "http://localhost:8080/v1/api/albums"
 
-echo '\ntest album photos'
-curl --location --request GET "http://localhost:8080/v1/api/album/sam-shortline"
+echo '\nPOST albums'
+curl --location --request POST "http://localhost:8080/v1/api/albums"
+
+echo '\nGET photos'
+curl --location --request GET "http://localhost:8080/v1/api/albums/sam-shortline"
+

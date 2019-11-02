@@ -23,9 +23,17 @@ func Initialize(config *Config) error {
 
 	// only do this the first time
 	once.Do(func() {
-		// init
+		// merge config with defaults
+		cx := config.MergeWithDefaults()
+
+		// config the db
 		if err == nil {
-			dbx, err = configDB(config)
+			dbx, err = configDB(cx)
+		}
+
+		// apply migrations
+		if err == nil {
+			err = migrateDB(cx)
 		}
 	})
 

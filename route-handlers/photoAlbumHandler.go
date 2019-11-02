@@ -5,20 +5,15 @@ import (
 	"net/http"
 
 	"github.com/atljoseph/api.josephgill.io/photoDB"
-	"github.com/atljoseph/api.josephgill.io/requester"
 
 	"github.com/atljoseph/api.josephgill.io/responder"
 )
-
-// PostPhotoAlbumResponse is the response returned by PostPhotoAlbumsHandler
-type PostPhotoAlbumResponse struct {
-	PhotoAlbum *photoDB.PhotoAlbum `json:"album"`
-}
 
 // PostPhotoAlbumsHandler gets all photo albums
 func PostPhotoAlbumsHandler(w http.ResponseWriter, r *http.Request) {
 	errTag := "handlers.PostPhotoAlbumsHandler"
 
+	// TODO: Get data from body of the request
 	album := &photoDB.PhotoAlbum{
 		Title:         "Yeah",
 		Description:   "Man",
@@ -26,16 +21,29 @@ func PostPhotoAlbumsHandler(w http.ResponseWriter, r *http.Request) {
 		CoverPhotoSrc: "sam-shortline-candler-grandy-papa-daddy-with-train-12.jpg",
 	}
 
-	// get the albums
-	album, err := photoDB.CreatePhotoAlbum(album)
+	// create a transaction
+	// TODO: User from JWT Request
+	txo, err := photoDB.NewTxO("Test User")
 	if err != nil {
+		responder.SendJSONHttpError(w, http.StatusBadRequest, fmt.Sprintf("%s: %s", errTag, err))
+	}
+
+	// get the albums
+	album, err = photoDB.CreatePhotoAlbum(txo, album)
+	if errTxo := txo.RollbackOnError(err); errTxo != nil {
 		responder.SendJSONHttpError(w, http.StatusBadRequest, fmt.Sprintf("%s: %s", errTag, err))
 		return
 	}
 
+	// commit transaction
+	err = txo.Commit()
+	if err != nil {
+		responder.SendJSONHttpError(w, http.StatusBadRequest, fmt.Sprintf("%s: %s", errTag, err))
+	}
+
 	// build the return data
-	res := &PostPhotoAlbumResponse{}
-	res.PhotoAlbum = album
+	res := &GetPhotoAlbumsResponse{}
+	res.PhotoAlbums = []*photoDB.PhotoAlbum{album}
 	responder.SendJSON(w, res)
 }
 
@@ -58,34 +66,5 @@ func GetPhotoAlbumsHandler(w http.ResponseWriter, r *http.Request) {
 	// build the return data
 	res := &GetPhotoAlbumsResponse{}
 	res.PhotoAlbums = albums
-	responder.SendJSON(w, res)
-}
-
-// GetPhotosResponse is the response returned by GetPhotoAlbumsHandler
-type GetPhotosResponse struct {
-	Photos []*photoDB.Photo `json:"photos"`
-}
-
-// GetPhotosByAlbumKeyHandler gets all photo albums
-func GetPhotosByAlbumKeyHandler(w http.ResponseWriter, r *http.Request) {
-	errTag := "handlers.GetPhotosByAlbumKeyHandler"
-
-	// process request params
-	mp, err := requester.Process(r, nil, requester.PhotoAlbumIDKey)
-	if err != nil {
-		responder.SendJSONHttpError(w, http.StatusBadRequest, fmt.Sprintf("%s: %s", errTag, err))
-		return
-	}
-
-	// get the photos
-	ps, err := photoDB.GetPhotosByAlbumKey(mp[requester.PhotoAlbumIDKey])
-	if err != nil {
-		responder.SendJSONHttpError(w, http.StatusBadRequest, fmt.Sprintf("%s: %s", errTag, err))
-		return
-	}
-
-	// build the return data
-	res := &GetPhotosResponse{}
-	res.Photos = ps
 	responder.SendJSON(w, res)
 }
