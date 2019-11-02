@@ -21,8 +21,8 @@ type Config struct {
 	Host string
 	// Connection Port for the Databsae
 	Port int
-	// DefaultDetabase for the connection
-	DefaultDetabase string
+	// DefaultDatabase for the connection
+	DefaultDatabase string
 	// ------------------------------------------------
 	// ConnString is the filepath to the database, or the connection string.
 	ConnString string
@@ -50,12 +50,12 @@ func (config *Config) MergeWithDefaults() *Config {
 	if config.Port == 0 {
 		config.Port = 3306
 	}
-	if strings.EqualFold(config.DefaultDetabase, "") {
-		config.DefaultDetabase = "photos"
+	if strings.EqualFold(config.DefaultDatabase, "") {
+		config.DefaultDatabase = "photos"
 	}
 	config.ConnType = "mysql"
 	if strings.EqualFold(config.ConnString, "") {
-		config.ConnString = fmt.Sprintf("%s:%s@(%s:%d)/%s?parseTime=true", config.Username, config.Password, config.Host, config.Port, config.DefaultDetabase)
+		config.ConnString = fmt.Sprintf("%s:%s@(%s:%d)/%s?parseTime=true", config.Username, config.Password, config.Host, config.Port, config.DefaultDatabase)
 	}
 	// ints will be 0 by default if not set
 	// negatives have no meaning

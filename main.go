@@ -12,7 +12,12 @@ func main() {
 
 	// setup the database connection(s) keychain, as a singleton
 	dbConfig := &photoDB.Config{
-		MaxOpenConns: 15,
+		MaxOpenConns:    15,
+		Username:        "root",
+		Password:        "password",
+		Host:            "localhost",
+		Port:            3306,
+		DefaultDatabase: "photos",
 	}
 	err := photoDB.Initialize(dbConfig)
 	if err != nil {
