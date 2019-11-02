@@ -13,7 +13,6 @@ func main() {
 	// setup the database connection(s) keychain, as a singleton
 	dbConfig := &photoDB.Config{
 		MaxOpenConns: 15,
-		ReplaceDB:    true,
 	}
 	err := photoDB.Initialize(dbConfig)
 	if err != nil {

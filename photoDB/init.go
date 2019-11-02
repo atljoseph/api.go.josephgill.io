@@ -7,10 +7,6 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-const (
-	dbxType = "sqlite3"
-)
-
 // TODO: load db params from os.Getenv("key"), OR load from JSON
 
 // private vars

@@ -10,16 +10,6 @@ LABEL maintainer="Joseph Gill <joseph.gill.atlanta@gmail.com>"
 # update
 RUN apk --update upgrade
 
-# enable usage of cgo
-# See http://stackoverflow.com/questions/34729748/installed-go-binary-not-found-in-path-on-alpine-linux-docker
-# RUN mkdir /lib64 && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
-# ENV PATH "/lib:$PATH"
-# RUN apk add --no-cache gcc g++ 
-RUN apk add --no-cache gcc musl-dev
-
-# add sqlite
-RUN apk add --no-cache sqlite
-
 # add bash et al
 RUN apk add --no-cache bash coreutils grep sed
 
@@ -37,22 +27,15 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o main .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 ######## Start a new stage from scratch #######
 FROM alpine:latest as final
 
 WORKDIR /root/
 
-# RUN apk --no-cache add ca-certificates tzdata 
-# # && update-ca-certificates
-
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
-
-# Copy in the database
-# TODO handle the database turnover better... can db be written to?
-COPY photos.db ./
 
 # Create an unprivileged user (order of operations matters)
 RUN adduser --disabled-password --gecos '' appuser

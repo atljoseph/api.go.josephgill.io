@@ -13,7 +13,7 @@ import (
 // TODO: handle db nulls with special type 	"gopkg.in/guregu/null.v3"
 
 // migrateDB migrates the photos DB, and returns error if failed
-func migrateDB(dbx *sqlx.DB) error {
+func migrateDB(dbx *sqlx.DB, cx *Config) error {
 	errTag := "migrateDB"
 
 	// sum up migrations in a slice
@@ -23,7 +23,7 @@ func migrateDB(dbx *sqlx.DB) error {
 	}
 
 	// apply migrations
-	n, err := migrate.Exec(dbx.DB, dbxType, migrations, migrate.Up)
+	n, err := migrate.Exec(dbx.DB, cx.ConnType, migrations, migrate.Up)
 	if err != nil {
 		return fmt.Errorf("%s: %s", errTag, err)
 	}
@@ -41,52 +41,69 @@ func migrateDB(dbx *sqlx.DB) error {
 // even if something is to be dropped, it should be included in a NEW migration
 var migrations = []*migrate.Migration{
 	&migrate.Migration{
+		Id: "2019-000-create-table-testy",
+		Up: []string{`
+CREATE TABLE IF NOT EXISTS testy(  
+	test_id INT NOT NULL AUTO_INCREMENT,  
+	test_name VARCHAR(100) NOT NULL,  
+	PRIMARY KEY ( test_id )  
+) 
+		`},
+	},
+	&migrate.Migration{
 		Id: "2019-001-create-table-album",
 		Up: []string{`
 CREATE TABLE IF NOT EXISTS album (
-	album_id INTEGER PRIMARY KEY AUTOINCREMENT
-	, title text NOT NULL UNIQUE
-	, description text NOT NULL
-	, key text NOT NULL UNIQUE
-	, cover_photo_src text NOT NULL UNIQUE
-);
+	album_id BIGINT NOT NULL AUTO_INCREMENT
+		, PRIMARY KEY (album_id)
+	, album_title VARCHAR(100) NOT NULL
+		, UNIQUE KEY(album_title)
+	, album_description VARCHAR(300) NOT NULL
+	, album_key VARCHAR(100) NOT NULL
+		, UNIQUE KEY(album_key)
+	, album_photo_src VARCHAR(4000) NOT NULL
+)
 		`},
 	},
 	&migrate.Migration{
 		Id: "2019-002-populate-table-album",
 		Up: []string{`
-INSERT INTO album (title, description, key, cover_photo_src) VALUES (
-	'Riding the SAM Shortline Train'
-	, 'From Cordele, GA to Plains, GA'
+INSERT INTO album (album_title, album_description, album_key, album_photo_src) VALUES (
+	'Riding the SAM Shortline Train 1'
+	, 'From Cordele, GA to Plains, GA 1'
 	, 'sam-shortline'
-	, 'sam-shortline-candler-grandy-papa-daddy-with-train-1.jpg'
-);
-INSERT INTO album (title, description, key, cover_photo_src) VALUES (
-	'8', '7', '6', '5'
-);
+	, 'sam-shortline-candler-grandy-papa-daddy-with-train-1.jpg 1'
+)`, `
+INSERT INTO album (album_title, album_description, album_key, album_photo_src) VALUES (
+	'Riding the SAM Shortline Train 2'
+	, 'From Cordele, GA to Plains, GA 2'
+	, 'sam-shortline 2'
+	, 'sam-shortline-candler-grandy-papa-daddy-with-train-1.jpg 2'
+)
 		`},
 	},
 	&migrate.Migration{
 		Id: "2019-003-create-table-photo",
 		Up: []string{`
 CREATE TABLE IF NOT EXISTS photo (
-	photo_id INTEGER PRIMARY KEY AUTOINCREMENT
-	, album_id INTEGER 
-	, title text NOT NULL
-	, description text NOT NULL
-	, src text NOT NULL UNIQUE
-);
-		`},
+	photo_id BIGINT NOT NULL AUTO_INCREMENT
+		, PRIMARY KEY (photo_id)
+	, album_id BIGINT NOT NULL
+	, photo_title VARCHAR(100) NOT NULL
+	, photo_description VARCHAR(300) NOT NULL
+	, photo_src VARCHAR(4000) NOT NULL
+)
+			`},
 	},
 	&migrate.Migration{
 		Id: "2019-004-populate-table-photo",
 		Up: []string{`
-INSERT INTO photo (album_id, title, description, src) VALUES (
+INSERT INTO photo (album_id, photo_title, photo_description, photo_src) VALUES (
 	1
 	, 'So much fun!'
 	, 'Look at that smile'
 	, 'sam-shortline-candler-grandy-papa-daddy-with-train-1.jpg'
-);
-		`},
+)
+			`},
 	},
 }

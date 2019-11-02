@@ -2,6 +2,6 @@
 THISDIR="$(dirname ${BASH_SOURCE[0]})"
 source $THISDIR/docker-variables.sh
 
-docker inspect $IMAGE_NAME:$IMAGE_TAG_FINAL
+docker exec -i $IMAGE_NAME mysql -uroot -ppassword <<< "show Databases;"
 
 # check the output
