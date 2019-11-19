@@ -1,3 +1,0 @@
-
-docker images
-docker ps

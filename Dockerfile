@@ -47,7 +47,8 @@ RUN chmod 755 .
 USER appuser
 
 # Expose port 8080 to the outside world
-EXPOSE 8080
+# EXPOSE 8080
 
 # Command to run the executable
-CMD ["./main"] 
+# CMD ["./main"] 
+ENTRYPOINT ./main

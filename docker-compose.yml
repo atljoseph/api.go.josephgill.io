@@ -1,0 +1,21 @@
+version: "3.2"
+services: 
+  mysql-instance:
+    container_name: mysql-instance 
+    build: ./mock-db/
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+  go-instance:
+    container_name: go-instance 
+    depends_on:
+        - mysql-instance
+    build: ./
+    # volumes:
+    #     - "./docker-volume:/go/src/bitbucket.org/wmsight/flourish-api"
+    environment:
+        - PHOTODB_USER=root
+        - PHOTODB_PASS=password
+        - PHOTODB_HOST=mysql-instance
+    ports:
+        - "8080:8080"

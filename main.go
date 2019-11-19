@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/atljoseph/api.josephgill.io/photoDB"
 	"github.com/atljoseph/api.josephgill.io/routes"
 	"github.com/atljoseph/api.josephgill.io/server"
@@ -13,9 +15,9 @@ func main() {
 	// setup the database connection(s) keychain, as a singleton
 	dbConfig := &photoDB.Config{
 		MaxOpenConns:    15,
-		Username:        "root",
-		Password:        "password",
-		Host:            "localhost",
+		Username:        os.Getenv("PHOTODB_USER"),
+		Password:        os.Getenv("PHOTODB_PASS"),
+		Host:            os.Getenv("PHOTODB_HOST"),
 		Port:            3306,
 		DefaultDatabase: "photos",
 	}
