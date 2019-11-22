@@ -8,10 +8,10 @@ import (
 )
 
 // Configure sets up the router for the api
-func Configure() (*mux.Router, error) {
+func Configure(isProd bool) (*mux.Router, error) {
 
 	router := mux.NewRouter().StrictSlash(true)
-	for _, route := range getRoutes() {
+	for _, route := range getRoutes(isProd) {
 		var handler http.Handler
 
 		// Last thing that will be executed is the actual handler function

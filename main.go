@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"os"
 
 	"github.com/atljoseph/api.josephgill.io/photoDB"
@@ -12,6 +13,10 @@ func main() {
 
 	// TODO: DON'T PANIC
 
+	// flag vars
+	isProd := flag.Bool("isProd", false, "set this flag when building prod")
+	flag.Parse()
+
 	// setup the database connection(s) keychain, as a singleton
 	dbConfig := &photoDB.Config{
 		MaxOpenConns:    15,
@@ -22,6 +27,7 @@ func main() {
 		DefaultDatabase: "photos",
 	}
 
+	// init the photo db
 	err := photoDB.Initialize(dbConfig)
 	if err != nil {
 		panic(err)
@@ -30,7 +36,7 @@ func main() {
 	// TODO: Write authDB and migration
 
 	// configure the routes
-	router, err := routes.Configure()
+	router, err := routes.Configure(*isProd)
 	if err != nil {
 		panic(err)
 	}

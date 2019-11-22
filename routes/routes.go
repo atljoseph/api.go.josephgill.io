@@ -7,8 +7,8 @@ import (
 	handlers "github.com/atljoseph/api.josephgill.io/route-handlers"
 )
 
-func getRoutes() Routes {
-	return Routes{
+func getRoutes(isProd bool) Routes {
+	routes := Routes{
 		Route{
 			Name:        "GetTestPathParamHandler",
 			Method:      "GET",
@@ -39,19 +39,22 @@ func getRoutes() Routes {
 			Pattern:     fmt.Sprintf("%s/albums/{%s}", BaseURL, requester.PhotoAlbumIDKey),
 			HandlerFunc: handlers.GetPhotosByAlbumKeyHandler,
 		},
-		// TODO // Remove for PROD until ready
-		Route{
-			Name:        "PostPhotoAlbum",
-			Method:      "POST",
-			Pattern:     fmt.Sprintf("%s/albums", BaseURL),
-			HandlerFunc: handlers.PostPhotoAlbumHandler,
-		},
-		// TODO // Remove for PROD until ready
-		Route{
-			Name:        "PostPhotoAlbumPhotoHandler",
-			Method:      "POST",
-			Pattern:     fmt.Sprintf("%s/albums/{%s}", BaseURL, requester.PhotoAlbumIDKey),
-			HandlerFunc: handlers.PostPhotoAlbumPhotoHandler,
-		},
 	}
+	if !isProd {
+		routes = append(routes,
+			Route{
+				Name:        "PostPhotoAlbum",
+				Method:      "POST",
+				Pattern:     fmt.Sprintf("%s/albums", BaseURL),
+				HandlerFunc: handlers.PostPhotoAlbumHandler,
+			},
+			Route{
+				Name:        "PostPhotoAlbumPhotoHandler",
+				Method:      "POST",
+				Pattern:     fmt.Sprintf("%s/albums/{%s}", BaseURL, requester.PhotoAlbumIDKey),
+				HandlerFunc: handlers.PostPhotoAlbumPhotoHandler,
+			},
+		)
+	}
+	return routes
 }
