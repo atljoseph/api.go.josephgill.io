@@ -2,8 +2,9 @@ package responder
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
+
+	"github.com/atljoseph/api.josephgill.io/apierr"
 )
 
 // SendJSON sends a JSON response
@@ -37,7 +38,8 @@ func sendJSONResponse(w http.ResponseWriter, response BaseResponse, errTag strin
 	// no job is done until the paperwork is finished
 	resJSON, err := json.Marshal(response)
 	if err != nil {
-		SendJSONHttpError(w, http.StatusBadRequest, fmt.Sprintf("%s: error marshalling response to json: %s", errTag, err))
+		err = apierr.Errorf(err, errTag, "error marshalling response to json")
+		SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}
 

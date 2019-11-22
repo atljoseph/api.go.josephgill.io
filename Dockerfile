@@ -10,9 +10,6 @@ LABEL maintainer="Joseph Gill <joseph.gill.atlanta@gmail.com>"
 # update
 RUN apk --update upgrade
 
-# add bash et al
-RUN apk add --no-cache bash coreutils grep sed
-
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
@@ -31,6 +28,10 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 ######## Start a new stage from scratch #######
 FROM alpine:latest as final
+
+# DEV ONLY #
+# add bash et al
+RUN apk add --no-cache bash coreutils grep sed curl
 
 WORKDIR /root/
 

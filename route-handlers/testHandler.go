@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/atljoseph/api.josephgill.io/apierr"
+
 	"github.com/atljoseph/api.josephgill.io/requester"
 	"github.com/atljoseph/api.josephgill.io/responder"
 )
@@ -15,12 +17,13 @@ type GetTestResponse struct {
 
 // GetTestPathParamHandler is just a test endpoint
 func GetTestPathParamHandler(w http.ResponseWriter, r *http.Request) {
-	errTag := "handlers.GetTestPathParamHandler"
+	errTag := "GetTestPathParamHandler"
 
 	// process request params
 	mp, err := requester.Process(r, nil, requester.TestNameKey)
 	if err != nil {
-		http.Error(w, fmt.Errorf("%s: %s", errTag, err).Error(), http.StatusBadRequest)
+		err = apierr.Errorf(err, errTag, "processing request params")
+		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -32,12 +35,13 @@ func GetTestPathParamHandler(w http.ResponseWriter, r *http.Request) {
 
 // GetTestQueryParamHandler is just a test endpoint
 func GetTestQueryParamHandler(w http.ResponseWriter, r *http.Request) {
-	errTag := "handlers.GetTestQueryParamHandler"
+	errTag := "GetTestQueryParamHandler"
 
 	pName := &requester.QueryParam{Name: requester.TestNameKey, DefaultValue: "Guest"}
 	err := requester.GetQueryParams(r, pName)
 	if err != nil {
-		http.Error(w, fmt.Errorf("%s: %s", errTag, err).Error(), http.StatusBadRequest)
+		err = apierr.Errorf(err, errTag, "getting query params")
+		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -49,8 +53,9 @@ func GetTestQueryParamHandler(w http.ResponseWriter, r *http.Request) {
 
 // GetTestErrorHandler is just a test endpoint that returns an error
 func GetTestErrorHandler(w http.ResponseWriter, r *http.Request) {
-	errTag := "handlers.GetTestErrorHandler"
+	errTag := "GetTestErrorHandler"
 
-	responder.SendJSONHttpError(w, http.StatusBadRequest, fmt.Errorf("%s: TEST", errTag).Error())
+	err := apierr.Errorf(nil, errTag, "TEST")
+	responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 	return
 }

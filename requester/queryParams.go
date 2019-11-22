@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/atljoseph/api.josephgill.io/apierr"
 )
 
 // QueryParam represents a query parameter and its default value
@@ -32,7 +34,8 @@ func GetQueryParams(r *http.Request, qps ...*QueryParam) error {
 
 		// if required and no value, return error
 		if qp.Required && len(val) == 0 {
-			return fmt.Errorf("%s: no value for required key (%s)", errTag, qp.Name)
+			err := fmt.Errorf("no value for required query parameter")
+			return apierr.Errorf(err, errTag, "key: %s", qp.Name)
 		}
 
 		// if no value, set a default

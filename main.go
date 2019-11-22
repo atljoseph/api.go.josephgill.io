@@ -21,6 +21,7 @@ func main() {
 		Port:            3306,
 		DefaultDatabase: "photos",
 	}
+
 	err := photoDB.Initialize(dbConfig)
 	if err != nil {
 		panic(err)

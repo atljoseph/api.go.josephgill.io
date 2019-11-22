@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/atljoseph/api.josephgill.io/apierr"
 	"github.com/gorilla/mux"
 )
 
@@ -19,12 +20,12 @@ func Process(r *http.Request, ptrObjToPopulate interface{}, pathKeys ...string) 
 	// get muxvars
 	mp, err := buildReqVars(r, pathKeys)
 	if err != nil {
-		return nil, fmt.Errorf("%s: error getting mux vars from request: %s", errTag, err)
+		return nil, apierr.Errorf(err, errTag, "error getting mux vars from request")
 	}
 
 	// decode json into passed in pointer object
 	if _, err := decodeJSON(r, ptrObjToPopulate); err != nil {
-		return nil, fmt.Errorf("%s: cannot decode json: %s", errTag, err)
+		return nil, apierr.Errorf(err, errTag, "cannot decode json")
 	}
 
 	return mp, nil
@@ -40,7 +41,7 @@ func decodeJSON(r *http.Request, obj interface{}) ([]byte, error) {
 
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		return nil, fmt.Errorf("%s: no value for key (%s)", errTag, err)
+		return nil, apierr.Errorf(err, errTag, "cannot decode json")
 	}
 
 	// Restore the io.ReadCloser to its original state
@@ -58,7 +59,7 @@ func decodeJSON(r *http.Request, obj interface{}) ([]byte, error) {
 
 	// Unmarshal body into obj interface
 	if err := json.Unmarshal(body, obj); err != nil {
-		return nil, fmt.Errorf("%s: error marshaling JSON to struct (%s)", errTag, err)
+		return nil, apierr.Errorf(err, errTag, "error marshaling JSON to struct")
 	}
 
 	return body, nil
@@ -79,7 +80,8 @@ func buildReqVars(r *http.Request, keys []string) (map[string]string, error) {
 		// get the value sent from the client
 		newVal := muxVars[key]
 		if newVal == "" {
-			return nil, fmt.Errorf("%s: no value for path param key (%s)", errTag, key)
+			err := fmt.Errorf("no value for required path parameter")
+			return nil, apierr.Errorf(err, errTag, "key: %s", key)
 		}
 
 		// sanitized the value

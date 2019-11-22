@@ -1,6 +1,8 @@
 package photoDB
 
-import "fmt"
+import (
+	"github.com/atljoseph/api.josephgill.io/apierr"
+)
 
 // PopulateDB populates the DB with data using the photoDB business logic
 func PopulateDB() error {
@@ -9,7 +11,7 @@ func PopulateDB() error {
 	// create a transaction
 	txo, err := NewTxO("Test User")
 	if err != nil {
-		return fmt.Errorf("%s: %s", errTag, err)
+		return apierr.Errorf(err, errTag, "open db transaction")
 	}
 
 	// TODO populate initial data with populateDB instead of migrate
@@ -17,7 +19,7 @@ func PopulateDB() error {
 	// commit transaction
 	err = txo.Commit()
 	if err != nil {
-		return fmt.Errorf("%s: %s", errTag, err)
+		return apierr.Errorf(err, errTag, "commit db transaction")
 	}
 
 	return nil

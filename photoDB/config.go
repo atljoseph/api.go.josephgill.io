@@ -6,6 +6,7 @@ import (
 	"time"
 
 	// sqlx plus specific drivers
+	"github.com/atljoseph/api.josephgill.io/apierr"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	// other drivers supported go here
@@ -79,13 +80,13 @@ func configDB(config *Config) (*sqlx.DB, error) {
 	// open the dbx object
 	dbx, err := sqlx.Open(config.ConnType, config.ConnString)
 	if err != nil {
-		return nil, fmt.Errorf("%s: %s", errTag, err)
+		return nil, apierr.Errorf(err, errTag, "opening db connection")
 	}
 
 	// ping the database
 	err = dbx.Ping()
 	if err != nil {
-		return nil, fmt.Errorf("%s: %s", errTag, err)
+		return nil, apierr.Errorf(err, errTag, "pinging db")
 	}
 
 	// set connection info

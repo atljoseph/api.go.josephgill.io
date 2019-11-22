@@ -1,6 +1,10 @@
 package photoDB
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/atljoseph/api.josephgill.io/apierr"
+)
 
 // GetPhotosByAlbumKey gets a photo album and returns it or an error
 func GetPhotosByAlbumKey(key string) ([]*Photo, error) {
@@ -17,12 +21,12 @@ SELECT p.*
 
 	err = dbx.Select(&ps, query, key)
 	if err != nil {
-		return nil, fmt.Errorf("%s: Select: %s", errTag, err)
+		return nil, apierr.Errorf(err, errTag, "Select")
 	}
 
 	// TODO: wrap this in a proper error
 	if len(ps) == 0 {
-		return nil, fmt.Errorf("%s: %s", errTag, "No rows returned from query")
+		return nil, apierr.Errorf(fmt.Errorf("No rows returned from query"), errTag, "could not find any photos")
 	}
 
 	return ps, nil
@@ -45,13 +49,13 @@ func CreatePhoto(txo *TxO, photo *Photo) (*Photo, error) {
 	// get the result
 	result, err := txo.NamedExec(query, photo)
 	if err != nil {
-		return nil, fmt.Errorf("%s: NamedExec: %s", errTag, err)
+		return nil, apierr.Errorf(err, errTag, "NamedExec")
 	}
 
 	// last inserted id
 	id, err := result.LastInsertId()
 	if err != nil {
-		return nil, fmt.Errorf("%s: LastInsertId: %s", errTag, err)
+		return nil, apierr.Errorf(err, errTag, "LastInsertId")
 	}
 	photo.PhotoID = id
 

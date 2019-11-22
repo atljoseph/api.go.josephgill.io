@@ -3,7 +3,9 @@ package photoDB
 import (
 	"fmt"
 	"sync"
+	"time"
 
+	"github.com/atljoseph/api.josephgill.io/apierr"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -20,6 +22,10 @@ var dbx *sqlx.DB
 // Call this function first!
 func Initialize(config *Config) error {
 	errTag := "photoDB.Initialize"
+
+	// sleep X seconds to give the db time to warm up if needed
+	fmt.Println("Sleeping to give db time to warm up")
+	time.Sleep(10 * time.Second)
 
 	// only do this the first time
 	once.Do(func() {
@@ -39,8 +45,7 @@ func Initialize(config *Config) error {
 
 	// return error if any, each and every time this function is called
 	if err != nil {
-		err = fmt.Errorf("%s: %s", errTag, err)
-		return err
+		return apierr.Errorf(err, errTag, "initializing db")
 	}
 
 	return nil

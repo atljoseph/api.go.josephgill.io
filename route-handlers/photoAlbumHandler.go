@@ -1,17 +1,17 @@
 package routeHandlers
 
 import (
-	"fmt"
 	"net/http"
 
+	"github.com/atljoseph/api.josephgill.io/apierr"
 	"github.com/atljoseph/api.josephgill.io/photoDB"
 
 	"github.com/atljoseph/api.josephgill.io/responder"
 )
 
-// PostPhotoAlbumsHandler gets all photo albums
-func PostPhotoAlbumsHandler(w http.ResponseWriter, r *http.Request) {
-	errTag := "handlers.PostPhotoAlbumsHandler"
+// PostPhotoAlbumHandler gets all photo albums
+func PostPhotoAlbumHandler(w http.ResponseWriter, r *http.Request) {
+	errTag := "PostPhotoAlbumHandler"
 
 	// TODO: Get data from body of the request
 	album := &photoDB.PhotoAlbum{
@@ -25,20 +25,28 @@ func PostPhotoAlbumsHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO: User from JWT Request
 	txo, err := photoDB.NewTxO("Test User")
 	if err != nil {
-		responder.SendJSONHttpError(w, http.StatusBadRequest, fmt.Sprintf("%s: %s", errTag, err))
+		err = apierr.Errorf(err, errTag, "open db transaction")
+		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
+		return
 	}
 
 	// get the albums
 	album, err = photoDB.CreatePhotoAlbum(txo, album)
-	if errTxo := txo.RollbackOnError(err); errTxo != nil {
-		responder.SendJSONHttpError(w, http.StatusBadRequest, fmt.Sprintf("%s: %s", errTag, err))
+	// TODO: Handle this with apierr http implementation - apierr.TerminateTxIfError()?
+	err = txo.RollbackOnError(err)
+	if err != nil {
+		err = apierr.Errorf(err, errTag, "create photo album")
+		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}
+	//
 
 	// commit transaction
 	err = txo.Commit()
 	if err != nil {
-		responder.SendJSONHttpError(w, http.StatusBadRequest, fmt.Sprintf("%s: %s", errTag, err))
+		err = apierr.Errorf(err, errTag, "commit db transaction")
+		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
+		return
 	}
 
 	// build the return data
@@ -54,12 +62,13 @@ type GetPhotoAlbumsResponse struct {
 
 // GetPhotoAlbumsHandler gets all photo albums
 func GetPhotoAlbumsHandler(w http.ResponseWriter, r *http.Request) {
-	errTag := "handlers.GetPhotoAlbumsHandler"
+	errTag := "GetPhotoAlbumsHandler"
 
 	// get the albums
 	albums, err := photoDB.GetPhotoAlbums()
 	if err != nil {
-		responder.SendJSONHttpError(w, http.StatusBadRequest, fmt.Sprintf("%s: %s", errTag, err))
+		err = apierr.Errorf(err, errTag, "get photo albums")
+		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}
 

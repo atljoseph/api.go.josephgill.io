@@ -23,11 +23,11 @@ func SendHttpError(w http.ResponseWriter, statusCode int, errText string) {
 }
 
 // SendJSONHttpError sends an error back to the client in a structured fashion
-func SendJSONHttpError(w http.ResponseWriter, statusCode int, errText string) {
+func SendJSONHttpError(w http.ResponseWriter, statusCode int, stackedError error) {
 	errTag := "responder.SendJSONError"
 
 	// print message
-	log.Println("ERROR", errText)
+	log.Println("ERROR", stackedError.Error())
 
 	// set response headers to be json
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -36,7 +36,7 @@ func SendJSONHttpError(w http.ResponseWriter, statusCode int, errText string) {
 	response := BaseResponse{
 		Message:    "Whoops, something screwed up :/",
 		StatusCode: statusCode,
-		Error:      errText,
+		Error:      stackedError.Error(),
 		IsError:    true,
 	}
 

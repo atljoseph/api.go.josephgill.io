@@ -3,6 +3,7 @@ package photoDB
 import (
 	"fmt"
 
+	"github.com/atljoseph/api.josephgill.io/apierr"
 	migrate "github.com/rubenv/sql-migrate"
 )
 
@@ -24,11 +25,11 @@ func migrateDB(cx *Config) error {
 	// apply migrations
 	n, err := migrate.Exec(dbx.DB, cx.ConnType, migrations, migrate.Up)
 	if err != nil {
-		return fmt.Errorf("%s: %s", errTag, err)
+		return apierr.Errorf(err, errTag, "applying migrations")
 	}
 
 	// once migrated, the migration will not be reapplied :)
-	fmt.Printf("sqlite db migrated with %d migrations\n", n)
+	fmt.Printf("db migrated with %d migrations\n", n)
 
 	return nil
 }

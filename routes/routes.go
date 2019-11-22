@@ -39,11 +39,19 @@ func getRoutes() Routes {
 			Pattern:     fmt.Sprintf("%s/albums/{%s}", BaseURL, requester.PhotoAlbumIDKey),
 			HandlerFunc: handlers.GetPhotosByAlbumKeyHandler,
 		},
+		// TODO // Remove for PROD until ready
 		Route{
-			Name:        "PostPhotosByAlbumKey",
+			Name:        "PostPhotoAlbum",
 			Method:      "POST",
 			Pattern:     fmt.Sprintf("%s/albums", BaseURL),
-			HandlerFunc: handlers.PostPhotoAlbumsHandler,
+			HandlerFunc: handlers.PostPhotoAlbumHandler,
+		},
+		// TODO // Remove for PROD until ready
+		Route{
+			Name:        "PostPhotoAlbumPhotoHandler",
+			Method:      "POST",
+			Pattern:     fmt.Sprintf("%s/albums/{%s}", BaseURL, requester.PhotoAlbumIDKey),
+			HandlerFunc: handlers.PostPhotoAlbumPhotoHandler,
 		},
 	}
 }
