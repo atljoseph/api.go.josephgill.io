@@ -30,6 +30,8 @@ func GetTestPathParamHandler(w http.ResponseWriter, r *http.Request) {
 	// respond
 	res := &GetTestResponse{}
 	res.Test = fmt.Sprintf("Hello, %s\n", mp[requester.TestNameKey])
+
+	// return
 	responder.SendJSON(w, res)
 }
 
@@ -48,6 +50,8 @@ func GetTestQueryParamHandler(w http.ResponseWriter, r *http.Request) {
 	// respond
 	res := &GetTestResponse{}
 	res.Test = fmt.Sprintf("Hello, %s\n", pName.Value)
+
+	// return
 	responder.SendJSON(w, res)
 }
 

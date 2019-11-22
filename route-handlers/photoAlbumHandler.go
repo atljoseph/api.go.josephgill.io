@@ -52,6 +52,8 @@ func PostPhotoAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	// build the return data
 	res := &GetPhotoAlbumsResponse{}
 	res.PhotoAlbums = []*photoDB.PhotoAlbum{album}
+
+	// return
 	responder.SendJSON(w, res)
 }
 
@@ -75,5 +77,7 @@ func GetPhotoAlbumsHandler(w http.ResponseWriter, r *http.Request) {
 	// build the return data
 	res := &GetPhotoAlbumsResponse{}
 	res.PhotoAlbums = albums
+
+	// return
 	responder.SendJSON(w, res)
 }
