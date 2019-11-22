@@ -1,0 +1,263 @@
+{
+	"info": {
+		"_postman_id": "4bbf062b-8728-4b85-8efb-d277cac53997",
+		"name": "ui.josephgill.io",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Go Test QueryParam Success",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/api/test?name=ME",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"api",
+						"test"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "ME"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Go Test PathParam Success",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/api/test/YOU",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"api",
+						"test",
+						"YOU"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Go Test Error",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/api/error",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"api",
+						"error"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Go Test Albums Get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/api/albums",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"api",
+						"albums"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Go Album Photos Get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/api/album/sam-shortline",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"api",
+						"album",
+						"sam-shortline"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Go Album Post",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/api/albums",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"api",
+						"albums"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BFF Go Test QueryParam Success",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4205/go/test?name=ME",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4205",
+					"path": [
+						"go",
+						"test"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "ME"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BFF Go Test PathParam Success",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4205/go/test/YOU",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4205",
+					"path": [
+						"go",
+						"test",
+						"YOU"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BFF Go Test Error",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4205/go/error",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4205",
+					"path": [
+						"go",
+						"error"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BFF Go Albums Get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4205/go/albums",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4205",
+					"path": [
+						"go",
+						"albums"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BFF Go Album Photos Get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4205/go/albums/sam-shortline",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4205",
+					"path": [
+						"go",
+						"albums",
+						"sam-shortline"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
