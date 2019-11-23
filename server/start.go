@@ -3,11 +3,9 @@ package server
 import (
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/gorilla/mux"
-	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 // Start starts the API's webserver
@@ -19,18 +17,6 @@ func Start(router *mux.Router) error {
 		Addr:         ":8080",
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
-	}
-
-	// logging
-	logFileLocation := os.Getenv("LOG_FILE_LOCATION")
-	if logFileLocation != "" {
-		log.SetOutput(&lumberjack.Logger{
-			Filename:   logFileLocation,
-			MaxSize:    500, // in MB
-			MaxBackups: 3,
-			MaxAge:     28,   // in days
-			Compress:   true, // false by default
-		})
 	}
 
 	// start server

@@ -12,7 +12,7 @@ services:
         - mysql-instance
     build: ./
     # volumes:
-    #     - "./docker-volume:/go/src/bitbucket.org/wmsight/flourish-api"
+    #     - "./docker-volume:/app"
     environment:
         - PHOTODB_USER=root
         - PHOTODB_PASS=password
@@ -20,5 +20,6 @@ services:
         - S3_PUBLIC_NAME=public.josephgill.io
         - S3_PUBLIC_URL=https://s3.us-east-2.amazonaws.com
         - S3_PUBLIC_SECRET=N/A
+        # - LOG_FILENAME=dev.log
     ports:
         - "8080:8080"

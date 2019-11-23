@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/atljoseph/api.josephgill.io/aws"
+	"github.com/atljoseph/api.josephgill.io/logger"
 	"github.com/atljoseph/api.josephgill.io/photoDB"
 	"github.com/atljoseph/api.josephgill.io/routes"
 	"github.com/atljoseph/api.josephgill.io/server"
@@ -16,10 +17,20 @@ var err error
 func main() {
 
 	// TODO: DON'T PANIC
+	// TODO: A real logging solution logrus?
 
 	// flag vars
 	isProd := flag.Bool("isProd", false, "set this flag when building prod")
 	flag.Parse()
+
+	// init the logger
+	loggerConfig := &logger.Config{
+		Filename: os.Getenv("LOG_FILENAME")}
+	err = logger.Initialize(loggerConfig)
+	if err != nil {
+		log.Fatal(err)
+		// panic(err)
+	}
 
 	// init the aws connectors
 	// singleton package
@@ -54,7 +65,8 @@ func main() {
 	// TODO: Write authDB and migration
 
 	// configure the routes
-	routesConfig := &routes.Config{IsProd: *isProd}
+	routesConfig := &routes.Config{
+		IsProd: *isProd}
 	router, err := routes.Initialize(routesConfig)
 	if err != nil {
 		log.Fatal(err)
