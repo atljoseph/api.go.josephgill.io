@@ -6,8 +6,6 @@ import (
 	"net/http"
 )
 
-// TODO: Implement error tracing/handling for http responder
-
 // SendHttpError sends an error back to the client in a structured fashion
 func SendHttpError(w http.ResponseWriter, statusCode int, errText string) {
 

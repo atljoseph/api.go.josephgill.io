@@ -3,11 +3,11 @@ package routes
 import (
 	"fmt"
 
+	"github.com/atljoseph/api.josephgill.io/handlers"
 	"github.com/atljoseph/api.josephgill.io/requester"
-	handlers "github.com/atljoseph/api.josephgill.io/route-handlers"
 )
 
-func getRoutes(isProd bool) Routes {
+func getRoutes(routesConfig Config) Routes {
 	routes := Routes{
 		Route{
 			Name:        "GetTestPathParamHandler",
@@ -40,7 +40,7 @@ func getRoutes(isProd bool) Routes {
 			HandlerFunc: handlers.GetPhotosByAlbumKeyHandler,
 		},
 	}
-	if !isProd {
+	if !routesConfig.IsProd {
 		routes = append(routes,
 			Route{
 				Name:        "PostPhotoAlbum",

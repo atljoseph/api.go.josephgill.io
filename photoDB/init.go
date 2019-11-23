@@ -9,8 +9,6 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-// TODO: load db params from os.Getenv("key"), OR load from JSON
-
 // private vars
 var err error
 var once sync.Once
@@ -20,7 +18,7 @@ var dbx *sqlx.DB
 
 // Initialize initializes all db connections used in the app
 // Call this function first!
-func Initialize(config *Config) error {
+func Initialize(c *Config) error {
 	errTag := "photoDB.Initialize"
 
 	// sleep X seconds to give the db time to warm up if needed
@@ -30,16 +28,19 @@ func Initialize(config *Config) error {
 	// only do this the first time
 	once.Do(func() {
 		// merge config with defaults
-		cx := config.MergeWithDefaults()
+		c = c.MergeWithDefaults()
+
+		// log the config
+		fmt.Printf("Config [photoDB]: %+v\n", c)
 
 		// config the db
 		if err == nil {
-			dbx, err = configDB(cx)
+			dbx, err = configDB(c)
 		}
 
 		// apply migrations
 		if err == nil {
-			err = migrateDB(cx)
+			err = migrateDB(c)
 		}
 	})
 

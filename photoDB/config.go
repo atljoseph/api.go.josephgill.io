@@ -69,7 +69,6 @@ func (config *Config) MergeWithDefaults() *Config {
 	if config.ConnMaxLifetimeMinutes < 0 || config.ConnMaxLifetimeMinutes == 0 {
 		config.ConnMaxLifetimeMinutes = 5
 	}
-	fmt.Printf("Config [photoDB]: %+v\n", config)
 	return config
 }
 

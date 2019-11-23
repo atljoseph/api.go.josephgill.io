@@ -1,9 +1,11 @@
-package routeHandlers
+package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/atljoseph/api.josephgill.io/apierr"
+	"github.com/atljoseph/api.josephgill.io/aws"
 	"github.com/atljoseph/api.josephgill.io/photoDB"
 	"github.com/atljoseph/api.josephgill.io/requester"
 	"github.com/atljoseph/api.josephgill.io/responder"
@@ -76,6 +78,13 @@ func GetPhotosByAlbumKeyHandler(w http.ResponseWriter, r *http.Request) {
 		err = apierr.Errorf(err, errTag, "get photos by album key")
 		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
+	}
+
+	// give the photos their url from s3
+	// TODO: have the client pass in a quality filter via query params ("1024" below)
+	for _, p := range ps {
+		relativePath := fmt.Sprintf("%s/%s", "1024", p.Src)
+		p.Src = aws.S3PublicAssetURL(relativePath)
 	}
 
 	// build the return data

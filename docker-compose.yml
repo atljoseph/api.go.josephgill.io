@@ -17,5 +17,8 @@ services:
         - PHOTODB_USER=root
         - PHOTODB_PASS=password
         - PHOTODB_HOST=mysql-instance
+        - S3_PUBLIC_NAME=public.josephgill.io
+        - S3_PUBLIC_URL=https://s3.us-east-2.amazonaws.com
+        - S3_PUBLIC_SECRET=N/A
     ports:
         - "8080:8080"

@@ -1,4 +1,4 @@
-package routeHandlers
+package handlers
 
 import (
 	"net/http"
@@ -22,7 +22,7 @@ func PostPhotoAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// create a transaction
-	// TODO: User from JWT Request
+	// TODO: Parse JWT and Get user from JWT Request
 	txo, err := photoDB.NewTxO("Test User")
 	if err != nil {
 		err = apierr.Errorf(err, errTag, "open db transaction")

@@ -24,7 +24,7 @@ SELECT p.*
 		return nil, apierr.Errorf(err, errTag, "Select")
 	}
 
-	// TODO: wrap this in a proper error
+	// TODO: wrap this in a proper error for no rows returned
 	if len(ps) == 0 {
 		return nil, apierr.Errorf(fmt.Errorf("No rows returned from query"), errTag, "could not find any photos")
 	}
