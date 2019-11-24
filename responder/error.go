@@ -1,20 +1,15 @@
 package responder
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 )
 
-// SendHttpError sends an error back to the client in a structured fashion
-func SendHttpError(w http.ResponseWriter, statusCode int, errText string) {
+// SendHTTPError sends an error back to the client in a structured fashion
+func SendHTTPError(w http.ResponseWriter, statusCode int, errText string) {
+	funcTag := "SendJSONError"
 
-	// print message
-	logTxt := fmt.Sprintf(
-		"ERROR: %s\n",
-		errText,
-	)
-	log.Println(logTxt)
+	// log message
+	logErrorResponse(funcTag, errText, statusCode)
 
 	// respond with error
 	http.Error(w, errText, statusCode)
@@ -22,10 +17,10 @@ func SendHttpError(w http.ResponseWriter, statusCode int, errText string) {
 
 // SendJSONHttpError sends an error back to the client in a structured fashion
 func SendJSONHttpError(w http.ResponseWriter, statusCode int, stackedError error) {
-	errTag := "responder.SendJSONError"
+	funcTag := "SendJSONError"
 
-	// print message
-	log.Println("ERROR", stackedError.Error())
+	// log message
+	logErrorResponse(funcTag, stackedError.Error(), statusCode)
 
 	// set response headers to be json
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -38,5 +33,5 @@ func SendJSONHttpError(w http.ResponseWriter, statusCode int, stackedError error
 		IsError:    true,
 	}
 
-	sendJSONResponse(w, response, errTag)
+	sendJSONResponse(w, response, funcTag)
 }

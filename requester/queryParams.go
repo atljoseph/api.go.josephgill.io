@@ -22,7 +22,9 @@ type QueryParam struct {
 // GetQueryParams extracts query parameter values from the request
 // needs work in order to extract slice-valued params
 func GetQueryParams(r *http.Request, qps ...*QueryParam) error {
-	errTag := "requester.GetQueryParams"
+	funcTag := "GetQueryParams"
+
+	logMessage(funcTag, "getting query parameter values")
 
 	// get the query params passed in with the request
 	requestQueryParams := r.URL.Query()
@@ -35,7 +37,7 @@ func GetQueryParams(r *http.Request, qps ...*QueryParam) error {
 		// if required and no value, return error
 		if qp.Required && len(val) == 0 {
 			err := fmt.Errorf("no value for required query parameter")
-			return apierr.Errorf(err, errTag, "key: %s", qp.Name)
+			return apierr.Errorf(err, funcTag, "key: %s", qp.Name)
 		}
 
 		// if no value, set a default

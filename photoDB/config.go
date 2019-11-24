@@ -74,18 +74,18 @@ func (config *Config) MergeWithDefaults() *Config {
 
 // configDB configures the Photos DB and returns an error if error ocurrs
 func configDB(config *Config) (*sqlx.DB, error) {
-	errTag := "configDB"
+	funcTag := "configDB"
 
 	// open the dbx object
 	dbx, err := sqlx.Open(config.ConnType, config.ConnString)
 	if err != nil {
-		return nil, apierr.Errorf(err, errTag, "opening db connection")
+		return nil, apierr.Errorf(err, funcTag, "opening db connection")
 	}
 
 	// ping the database
 	err = dbx.Ping()
 	if err != nil {
-		return nil, apierr.Errorf(err, errTag, "pinging db")
+		return nil, apierr.Errorf(err, funcTag, "pinging db")
 	}
 
 	// set connection info

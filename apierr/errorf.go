@@ -5,20 +5,23 @@ import (
 )
 
 // Errorf composes or adds to a StackedError
-func Errorf(err error, errTag, errString string, args ...interface{}) error {
+func Errorf(err error, funcTag, errString string, args ...interface{}) error {
 	errString = formatErrorString(errString, args)
 
 	// assert error to type StackedError
 	// if failure, then return new stacked error
 	stackedError, ok := err.(StackedError)
 	if !ok {
-		return StackedError{
-			errorMessage: composeStackMsg(err, errTag, errString),
+		stackedError = StackedError{
+			errorMessage: composeStackMsg(err, funcTag, errString),
 		}
+	} else {
+		// if error is already stacked error, then compose a new message
+		stackedError.errorMessage = composeStackMsg(fmt.Errorf(stackedError.errorMessage), funcTag, errString)
 	}
 
-	// if error is already stacked error, then compose a new message
-	stackedError.errorMessage = composeStackMsg(fmt.Errorf(stackedError.errorMessage), errTag, errString)
+	// log error
+	logError(stackedError)
 
 	return stackedError
 }

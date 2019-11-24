@@ -2,47 +2,44 @@ package logger
 
 import (
 	"fmt"
-	"log"
+	"os"
 	"sync"
 
-	"github.com/atljoseph/api.josephgill.io/apierr"
-	"gopkg.in/natefinch/lumberjack.v2"
+	"github.com/sirupsen/logrus"
 )
 
 // private vars
 var err error
 var once sync.Once
 
-// TODO: A real logging solution logrus?
-
 // Initialize initializes this singleton package
 func Initialize(c *Config) error {
-	errTag := "logger.Initialize"
+	funcTag := "Initialize"
 
 	once.Do(func() {
 		// merge config with defaults
 		c = c.MergeWithDefaults()
 
-		// log the config
-		fmt.Printf("Config [logger]: %+v\n", c)
-
 		if err == nil {
-			if c.Filename != "" {
-				log.SetOutput(&lumberjack.Logger{
-					Filename:   c.Filename,
-					MaxSize:    500, // in MB
-					MaxBackups: 3,
-					MaxAge:     28,   // in days
-					Compress:   true, // false by default
-				})
-			}
+			// Log as JSON instead of the default ASCII formatter.
+			// logrus.SetFormatter(&logrus.JSONFormatter{})
+			logrus.SetFormatter(&logrus.TextFormatter{})
+
+			// Output to stdout instead of the default stderr
+			// Can be any io.Writer, see below for File example
+			logrus.SetOutput(os.Stdout)
+
+			// Only log the warning severity or above.
+			logrus.SetLevel(logrus.DebugLevel)
 		}
 
+		// log things AFTER initialized (above)
+		logMessage(funcTag, "init completed")
 	})
 
 	// return error if any, each and every time this function is called
 	if err != nil {
-		return apierr.Errorf(err, errTag, "initializing logger")
+		return fmt.Errorf("%s (%s) --> %s", funcTag, "initializing logger", err)
 	}
 
 	return nil

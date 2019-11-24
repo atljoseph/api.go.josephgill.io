@@ -14,18 +14,20 @@ import (
 
 var err error
 
+const logID = "main"
+
 func main() {
+	funcTag := "main"
 
 	// TODO: DON'T PANIC
-	// TODO: A real logging solution logrus?
 
 	// flag vars
 	isProd := flag.Bool("isProd", false, "set this flag when building prod")
 	flag.Parse()
 
 	// init the logger
-	loggerConfig := &logger.Config{
-		Filename: os.Getenv("LOG_FILENAME")}
+	// this MUST be done first
+	loggerConfig := &logger.Config{} // Filename: os.Getenv("LOG_FILENAME")
 	err = logger.Initialize(loggerConfig)
 	if err != nil {
 		log.Fatal(err)
@@ -35,16 +37,17 @@ func main() {
 	// init the aws connectors
 	// singleton package
 	awsConfig := &aws.Config{
+		S3PublicRegion: os.Getenv("S3_PUBLIC_REGION"),
 		S3PublicName:   os.Getenv("S3_PUBLIC_NAME"),
 		S3PublicURL:    os.Getenv("S3_PUBLIC_URL"),
-		S3PublicSecret: os.Getenv("S3_PUBLIC_SECRET"),
+		S3UserID:       os.Getenv("S3_USER_ID"),
+		S3UserSecret:   os.Getenv("S3_USER_SECRET"),
 	}
 	err = aws.Initialize(awsConfig)
 	if err != nil {
-		log.Fatal(err)
-		// panic(err)
+		logger.EntryWithError(logID, funcTag, err)
+		panic(err)
 	}
-	aws.S3PublicAssetURL("123")
 
 	// init the photo db
 	// singleton package
@@ -58,8 +61,8 @@ func main() {
 	}
 	err = photoDB.Initialize(dbConfig)
 	if err != nil {
-		log.Fatal(err)
-		// panic(err)
+		logger.EntryWithError(logID, funcTag, err)
+		panic(err)
 	}
 
 	// TODO: Write authDB and migration
@@ -69,14 +72,14 @@ func main() {
 		IsProd: *isProd}
 	router, err := routes.Initialize(routesConfig)
 	if err != nil {
-		log.Fatal(err)
-		// panic(err)
+		logger.EntryWithError(logID, funcTag, err)
+		panic(err)
 	}
 
 	// start the go server
 	err = server.Start(router)
 	if err != nil {
-		log.Fatal(err)
-		// panic(err)
+		logger.EntryWithError(logID, funcTag, err)
+		panic(err)
 	}
 }

@@ -10,6 +10,7 @@ import (
 
 // Start starts the API's webserver
 func Start(router *mux.Router) error {
+	funcTag := "server.Start"
 
 	// server
 	srv := &http.Server{
@@ -21,7 +22,7 @@ func Start(router *mux.Router) error {
 
 	// start server
 	go func() {
-		log.Println("Starting server")
+		logMessage(funcTag, "Shutting down")
 		err := srv.ListenAndServe()
 		// https://github.com/denji/golang-tls
 		// err := http.ListenAndServeTLS(":8080", "https-server.crt", "https-server.key", nil)

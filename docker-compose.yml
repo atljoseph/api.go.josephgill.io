@@ -1,25 +1,27 @@
 version: "3.2"
 services: 
-  mysql-instance:
-    container_name: mysql-instance 
+  mock-db:
+    container_name: mock-db 
     build: ./mock-db/
     restart: unless-stopped
     ports:
       - "3306:3306"
-  go-instance:
-    container_name: go-instance 
+  api:
+    container_name: api 
     depends_on:
-        - mysql-instance
+        - mock-db
     build: ./
     # volumes:
     #     - "./docker-volume:/app"
     environment:
         - PHOTODB_USER=root
         - PHOTODB_PASS=password
-        - PHOTODB_HOST=mysql-instance
+        - PHOTODB_HOST=mock-db
+        - S3_PUBLIC_REGION=us-east-2
         - S3_PUBLIC_NAME=public.josephgill.io
         - S3_PUBLIC_URL=https://s3.us-east-2.amazonaws.com
-        - S3_PUBLIC_SECRET=N/A
-        # - LOG_FILENAME=dev.log
+        # READ ONLY USER:
+        - S3_USER_ID=AKIA5A6MNRYQMQHB7THS
+        - S3_USER_SECRET=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
     ports:
         - "8080:8080"

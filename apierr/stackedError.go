@@ -4,6 +4,7 @@ package apierr
 type StackedError struct {
 	errorMessage string
 	errorCode    int
+	isLogged     bool
 }
 
 // Error allows StackedError to satisfy the error interface

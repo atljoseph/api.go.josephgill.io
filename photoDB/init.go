@@ -1,7 +1,6 @@
 package photoDB
 
 import (
-	"fmt"
 	"sync"
 	"time"
 
@@ -19,10 +18,10 @@ var dbx *sqlx.DB
 // Initialize initializes all db connections used in the app
 // Call this function first!
 func Initialize(c *Config) error {
-	errTag := "photoDB.Initialize"
+	funcTag := "Initialize"
 
 	// sleep X seconds to give the db time to warm up if needed
-	fmt.Println("Sleeping to give db time to warm up")
+	logMessage(funcTag, "Sleeping to give db time to warm up")
 	time.Sleep(10 * time.Second)
 
 	// only do this the first time
@@ -31,7 +30,7 @@ func Initialize(c *Config) error {
 		c = c.MergeWithDefaults()
 
 		// log the config
-		fmt.Printf("Config [photoDB]: %+v\n", c)
+		logMessage(funcTag, "start")
 
 		// config the db
 		if err == nil {
@@ -42,11 +41,13 @@ func Initialize(c *Config) error {
 		if err == nil {
 			err = migrateDB(c)
 		}
+
+		logMessage(funcTag, "end")
 	})
 
 	// return error if any, each and every time this function is called
 	if err != nil {
-		return apierr.Errorf(err, errTag, "initializing db")
+		return apierr.Errorf(err, funcTag, "initializing db")
 	}
 
 	return nil

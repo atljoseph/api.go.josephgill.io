@@ -18,7 +18,7 @@ type GetPhotosResponse struct {
 
 // PostPhotoAlbumPhotoHandler gets all photo albums
 func PostPhotoAlbumPhotoHandler(w http.ResponseWriter, r *http.Request) {
-	errTag := "PostPhotoAlbumPhotoHandler"
+	funcTag := "PostPhotoAlbumPhotoHandler"
 
 	// TODO: Get data from body of the request
 	photo := &photoDB.Photo{
@@ -31,7 +31,7 @@ func PostPhotoAlbumPhotoHandler(w http.ResponseWriter, r *http.Request) {
 	// create a transaction
 	txo, err := photoDB.NewTxO("Test User")
 	if err != nil {
-		err = apierr.Errorf(err, errTag, "open db transaction")
+		err = apierr.Errorf(err, funcTag, "open db transaction")
 		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}
@@ -39,7 +39,7 @@ func PostPhotoAlbumPhotoHandler(w http.ResponseWriter, r *http.Request) {
 	// get the albums
 	photo, err = photoDB.CreatePhoto(txo, photo)
 	if errTxo := txo.RollbackOnError(err); errTxo != nil {
-		err = apierr.Errorf(err, errTag, "create photo")
+		err = apierr.Errorf(err, funcTag, "create photo")
 		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}
@@ -47,7 +47,7 @@ func PostPhotoAlbumPhotoHandler(w http.ResponseWriter, r *http.Request) {
 	// commit transaction
 	err = txo.Commit()
 	if err != nil {
-		err = apierr.Errorf(err, errTag, "commit db transaction")
+		err = apierr.Errorf(err, funcTag, "commit db transaction")
 		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}
@@ -62,12 +62,12 @@ func PostPhotoAlbumPhotoHandler(w http.ResponseWriter, r *http.Request) {
 
 // GetPhotosByAlbumKeyHandler gets all photo albums
 func GetPhotosByAlbumKeyHandler(w http.ResponseWriter, r *http.Request) {
-	errTag := "GetPhotosByAlbumKeyHandler"
+	funcTag := "GetPhotosByAlbumKeyHandler"
 
 	// process request params
-	mp, err := requester.Process(r, nil, requester.PhotoAlbumIDKey)
+	mp, err := requester.GetRequestParams(r, nil, requester.PhotoAlbumIDKey)
 	if err != nil {
-		err = apierr.Errorf(err, errTag, "process request params")
+		err = apierr.Errorf(err, funcTag, "process request params")
 		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}
@@ -75,7 +75,7 @@ func GetPhotosByAlbumKeyHandler(w http.ResponseWriter, r *http.Request) {
 	// get the photos
 	ps, err := photoDB.GetPhotosByAlbumKey(mp[requester.PhotoAlbumIDKey])
 	if err != nil {
-		err = apierr.Errorf(err, errTag, "get photos by album key")
+		err = apierr.Errorf(err, funcTag, "get photos by album key")
 		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}

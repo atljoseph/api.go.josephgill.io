@@ -11,7 +11,7 @@ import (
 
 // PostPhotoAlbumHandler gets all photo albums
 func PostPhotoAlbumHandler(w http.ResponseWriter, r *http.Request) {
-	errTag := "PostPhotoAlbumHandler"
+	funcTag := "PostPhotoAlbumHandler"
 
 	// TODO: Get data from body of the request
 	album := &photoDB.PhotoAlbum{
@@ -25,7 +25,7 @@ func PostPhotoAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO: Parse JWT and Get user from JWT Request
 	txo, err := photoDB.NewTxO("Test User")
 	if err != nil {
-		err = apierr.Errorf(err, errTag, "open db transaction")
+		err = apierr.Errorf(err, funcTag, "open db transaction")
 		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}
@@ -35,7 +35,7 @@ func PostPhotoAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO: Handle this with apierr http implementation - apierr.TerminateTxIfError()?
 	err = txo.RollbackOnError(err)
 	if err != nil {
-		err = apierr.Errorf(err, errTag, "create photo album")
+		err = apierr.Errorf(err, funcTag, "create photo album")
 		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}
@@ -44,7 +44,7 @@ func PostPhotoAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	// commit transaction
 	err = txo.Commit()
 	if err != nil {
-		err = apierr.Errorf(err, errTag, "commit db transaction")
+		err = apierr.Errorf(err, funcTag, "commit db transaction")
 		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}
@@ -64,12 +64,12 @@ type GetPhotoAlbumsResponse struct {
 
 // GetPhotoAlbumsHandler gets all photo albums
 func GetPhotoAlbumsHandler(w http.ResponseWriter, r *http.Request) {
-	errTag := "GetPhotoAlbumsHandler"
+	funcTag := "GetPhotoAlbumsHandler"
 
 	// get the albums
 	albums, err := photoDB.GetPhotoAlbums()
 	if err != nil {
-		err = apierr.Errorf(err, errTag, "get photo albums")
+		err = apierr.Errorf(err, funcTag, "get photo albums")
 		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}

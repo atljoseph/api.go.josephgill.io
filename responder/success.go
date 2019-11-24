@@ -9,7 +9,7 @@ import (
 
 // SendJSON sends a JSON response
 func SendJSON(w http.ResponseWriter, responseObj interface{}) { // []byte) {
-	errTag := "responder.SendJSON"
+	funcTag := "SendJSON"
 	statusCode := http.StatusOK
 
 	// set response headers to be json
@@ -26,7 +26,7 @@ func SendJSON(w http.ResponseWriter, responseObj interface{}) { // []byte) {
 	// SendError(w, "Test Error", http.StatusBadRequest)
 	// return
 
-	sendJSONResponse(w, response, errTag)
+	sendJSONResponse(w, response, funcTag)
 }
 
 // resBytes := new(bytes.Buffer)
@@ -34,11 +34,11 @@ func SendJSON(w http.ResponseWriter, responseObj interface{}) { // []byte) {
 
 // responder.SendJSON(w, resBytes.Bytes())
 
-func sendJSONResponse(w http.ResponseWriter, response BaseResponse, errTag string) {
+func sendJSONResponse(w http.ResponseWriter, response BaseResponse, funcTag string) {
 	// no job is done until the paperwork is finished
 	resJSON, err := json.Marshal(response)
 	if err != nil {
-		err = apierr.Errorf(err, errTag, "error marshalling response to json")
+		err = apierr.Errorf(err, funcTag, "error marshalling response to json")
 		SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}

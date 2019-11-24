@@ -8,7 +8,9 @@ import (
 
 // GetPhotosByAlbumKey gets a photo album and returns it or an error
 func GetPhotosByAlbumKey(key string) ([]*Photo, error) {
-	errTag := "photoDB.GetPhotosByAlbumKey"
+	funcTag := "GetPhotosByAlbumKey"
+
+	logMessage(funcTag, "get all photos for album")
 
 	// build the query
 	var ps []*Photo
@@ -21,12 +23,12 @@ SELECT p.*
 
 	err = dbx.Select(&ps, query, key)
 	if err != nil {
-		return nil, apierr.Errorf(err, errTag, "Select")
+		return nil, apierr.Errorf(err, funcTag, "Select")
 	}
 
 	// TODO: wrap this in a proper error for no rows returned
 	if len(ps) == 0 {
-		return nil, apierr.Errorf(fmt.Errorf("No rows returned from query"), errTag, "could not find any photos")
+		return nil, apierr.Errorf(fmt.Errorf("No rows returned from query"), funcTag, "could not find any photos")
 	}
 
 	return ps, nil
@@ -34,7 +36,9 @@ SELECT p.*
 
 // CreatePhoto is just a test right now
 func CreatePhoto(txo *TxO, photo *Photo) (*Photo, error) {
-	errTag := "photoDB.CreatePhoto"
+	funcTag := "CreatePhoto"
+
+	logMessage(funcTag, "insert new album photo")
 
 	// build the query
 	query := `
@@ -49,13 +53,13 @@ func CreatePhoto(txo *TxO, photo *Photo) (*Photo, error) {
 	// get the result
 	result, err := txo.NamedExec(query, photo)
 	if err != nil {
-		return nil, apierr.Errorf(err, errTag, "NamedExec")
+		return nil, apierr.Errorf(err, funcTag, "NamedExec")
 	}
 
 	// last inserted id
 	id, err := result.LastInsertId()
 	if err != nil {
-		return nil, apierr.Errorf(err, errTag, "LastInsertId")
+		return nil, apierr.Errorf(err, funcTag, "LastInsertId")
 	}
 	photo.PhotoID = id
 

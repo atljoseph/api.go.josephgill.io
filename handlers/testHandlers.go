@@ -17,12 +17,12 @@ type GetTestResponse struct {
 
 // GetTestPathParamHandler is just a test endpoint
 func GetTestPathParamHandler(w http.ResponseWriter, r *http.Request) {
-	errTag := "GetTestPathParamHandler"
+	funcTag := "GetTestPathParamHandler"
 
 	// process request params
-	mp, err := requester.Process(r, nil, requester.TestNameKey)
+	mp, err := requester.GetRequestParams(r, nil, requester.TestNameKey)
 	if err != nil {
-		err = apierr.Errorf(err, errTag, "processing request params")
+		err = apierr.Errorf(err, funcTag, "processing request params")
 		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}
@@ -37,12 +37,12 @@ func GetTestPathParamHandler(w http.ResponseWriter, r *http.Request) {
 
 // GetTestQueryParamHandler is just a test endpoint
 func GetTestQueryParamHandler(w http.ResponseWriter, r *http.Request) {
-	errTag := "GetTestQueryParamHandler"
+	funcTag := "GetTestQueryParamHandler"
 
 	pName := &requester.QueryParam{Name: requester.TestNameKey, DefaultValue: "Guest"}
 	err := requester.GetQueryParams(r, pName)
 	if err != nil {
-		err = apierr.Errorf(err, errTag, "getting query params")
+		err = apierr.Errorf(err, funcTag, "getting query params")
 		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 		return
 	}
@@ -57,9 +57,9 @@ func GetTestQueryParamHandler(w http.ResponseWriter, r *http.Request) {
 
 // GetTestErrorHandler is just a test endpoint that returns an error
 func GetTestErrorHandler(w http.ResponseWriter, r *http.Request) {
-	errTag := "GetTestErrorHandler"
+	funcTag := "GetTestErrorHandler"
 
-	err := apierr.Errorf(nil, errTag, "TEST")
+	err := apierr.Errorf(nil, funcTag, "TEST")
 	responder.SendJSONHttpError(w, http.StatusBadRequest, err)
 	return
 }

@@ -6,12 +6,14 @@ import (
 
 // PopulateDB populates the DB with data using the photoDB business logic
 func PopulateDB() error {
-	errTag := "photoDB.PopulateDB"
+	funcTag := "PopulateDB"
+
+	logMessage(funcTag, "populate initial data")
 
 	// create a transaction
 	txo, err := NewTxO("Test User")
 	if err != nil {
-		return apierr.Errorf(err, errTag, "open db transaction")
+		return apierr.Errorf(err, funcTag, "open db transaction")
 	}
 
 	// TODO populate initial data with populateDB instead of migrate
@@ -19,7 +21,7 @@ func PopulateDB() error {
 	// commit transaction
 	err = txo.Commit()
 	if err != nil {
-		return apierr.Errorf(err, errTag, "commit db transaction")
+		return apierr.Errorf(err, funcTag, "commit db transaction")
 	}
 
 	return nil

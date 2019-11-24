@@ -155,11 +155,11 @@ func (txo *TxO) Exec(query string, args ...interface{}) (r sql.Result, err error
 // NewTxO initiates and returns a pointer to a TxO object.
 // It takes in a *sqlx.DB object to begin the transaction from.
 func NewTxO(email string) (*TxO, error) {
-	errTag := "photoDB.NewTxO"
+	funcTag := "NewTxO"
 
 	tx, err := dbx.Beginx()
 	if err != nil {
-		return nil, apierr.Errorf(err, errTag, "error beginning transaction")
+		return nil, apierr.Errorf(err, funcTag, "error beginning transaction")
 	}
 
 	return &TxO{
@@ -170,11 +170,11 @@ func NewTxO(email string) (*TxO, error) {
 
 // NewTxOWithCTX returns a new TxO object that has a context baked into it
 func NewTxOWithCTX(ctx context.Context, db *sqlx.DB, email string) (*TxO, error) {
-	errTag := "photoDB.NewTxOWithCTX"
+	funcTag := "NewTxOWithCTX"
 
 	tx, err := db.BeginTxx(ctx, nil)
 	if err != nil {
-		return nil, apierr.Errorf(err, errTag, "unable to begin transaction")
+		return nil, apierr.Errorf(err, funcTag, "unable to begin transaction")
 	}
 
 	return &TxO{
@@ -208,19 +208,19 @@ func (txo *TxO) UpdateGetAffected(q, field, separator string, args ...interface{
 
 // Rollback rolls back a transaction and sets the terminated flag to true on TxO
 func (txo *TxO) Rollback() error {
-	errTag := "TxO.Rollback"
+	funcTag := "TxO.Rollback"
 
 	txo.Terminated = true
 	err := txo.Tx.Rollback()
 	if err != nil {
-		return apierr.Errorf(err, errTag, "unable to rollback transaction")
+		return apierr.Errorf(err, funcTag, "unable to rollback transaction")
 	}
 	return nil
 }
 
 // RollbackOnError rollsback the transaction if error
 func (txo *TxO) RollbackOnError(err error) error {
-	errTag := "TxO.RollbackOnError"
+	funcTag := "TxO.RollbackOnError"
 
 	// return if no error incoming
 	if err == nil {
@@ -230,16 +230,16 @@ func (txo *TxO) RollbackOnError(err error) error {
 	// rollback, since error
 	errR := txo.Rollback()
 	if errR != nil {
-		return apierr.Errorf(err, errTag, errR.Error())
+		return apierr.Errorf(err, funcTag, errR.Error())
 	}
 
 	// return original error if rollback was successful
-	return apierr.Errorf(err, errTag, "rollback on query error")
+	return apierr.Errorf(err, funcTag, "rollback on query error")
 }
 
 // Commit commits a transaction and sets the terminated flag to true on TxO
 func (txo *TxO) Commit() error {
-	errTag := "TxO.Commit"
+	funcTag := "TxO.Commit"
 
 	txo.Terminated = true
 
@@ -248,7 +248,7 @@ func (txo *TxO) Commit() error {
 	err := txo.Tx.Commit()
 	err = txo.RollbackOnError(err)
 	if err != nil {
-		return apierr.Errorf(err, errTag, "unable to commit transaction")
+		return apierr.Errorf(err, funcTag, "unable to commit transaction")
 	}
 
 	return nil

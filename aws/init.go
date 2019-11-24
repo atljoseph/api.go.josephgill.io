@@ -1,7 +1,6 @@
 package aws
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/atljoseph/api.josephgill.io/apierr"
@@ -17,10 +16,11 @@ var config *Config
 // Initialize initializes all a new aws connector package
 // Call this function first!
 func Initialize(c *Config) error {
-	errTag := "aws.Initialize"
+	funcTag := "Initialize"
 
 	// only do this the first time
 	once.Do(func() {
+		logMessage(funcTag, "start")
 
 		// merge config with defaults
 		c = c.MergeWithDefaults()
@@ -31,12 +31,14 @@ func Initialize(c *Config) error {
 		}
 
 		// log it
-		fmt.Printf("Config [aws]: %+v\n", config)
+		logMessage(funcTag, "end")
+
+		S3PublicAssetList()
 	})
 
 	// return error if any, each and every time this function is called
 	if err != nil {
-		return apierr.Errorf(err, errTag, "initializing package")
+		return apierr.Errorf(err, funcTag, "initializing package")
 	}
 
 	return nil

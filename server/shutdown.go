@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -11,6 +10,7 @@ import (
 )
 
 func waitForShutdown(srv *http.Server) {
+	funcTag := "waitForShutdown"
 
 	// create a channel
 	sigquit := make(chan os.Signal, 1)
@@ -24,6 +24,6 @@ func waitForShutdown(srv *http.Server) {
 	defer cancel()
 	srv.Shutdown(ctx)
 
-	log.Println("Shutting down")
+	logMessage(funcTag, "Shutting down")
 	os.Exit(0)
 }
