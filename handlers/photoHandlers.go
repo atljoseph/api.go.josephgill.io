@@ -32,7 +32,7 @@ func PostPhotoAlbumPhotoHandler(w http.ResponseWriter, r *http.Request) {
 	txo, err := photoDB.NewTxO("Test User")
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "open db transaction")
-		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
+		responder.SendJSONError(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -40,7 +40,7 @@ func PostPhotoAlbumPhotoHandler(w http.ResponseWriter, r *http.Request) {
 	photo, err = photoDB.CreatePhoto(txo, photo)
 	if errTxo := txo.RollbackOnError(err); errTxo != nil {
 		err = apierr.Errorf(err, funcTag, "create photo")
-		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
+		responder.SendJSONError(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -48,7 +48,7 @@ func PostPhotoAlbumPhotoHandler(w http.ResponseWriter, r *http.Request) {
 	err = txo.Commit()
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "commit db transaction")
-		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
+		responder.SendJSONError(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -68,7 +68,7 @@ func GetPhotosByAlbumKeyHandler(w http.ResponseWriter, r *http.Request) {
 	mp, err := requester.GetRequestParams(r, nil, requester.PhotoAlbumIDKey)
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "process request params")
-		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
+		responder.SendJSONError(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -76,7 +76,7 @@ func GetPhotosByAlbumKeyHandler(w http.ResponseWriter, r *http.Request) {
 	ps, err := photoDB.GetPhotosByAlbumKey(mp[requester.PhotoAlbumIDKey])
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "get photos by album key")
-		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
+		responder.SendJSONError(w, http.StatusBadRequest, err)
 		return
 	}
 

@@ -7,7 +7,7 @@ type StackedError struct {
 	isLogged     bool
 }
 
-// Error allows StackedError to satisfy the error interface
+// StackedError only needs to satisfy the error interface
 func (se StackedError) Error() string {
 	return se.errorMessage
 }

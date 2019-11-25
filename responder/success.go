@@ -39,7 +39,7 @@ func sendJSONResponse(w http.ResponseWriter, response BaseResponse, funcTag stri
 	resJSON, err := json.Marshal(response)
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "error marshalling response to json")
-		SendJSONHttpError(w, http.StatusBadRequest, err)
+		SendJSONError(w, http.StatusBadRequest, err)
 		return
 	}
 

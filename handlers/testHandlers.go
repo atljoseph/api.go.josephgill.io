@@ -23,7 +23,7 @@ func GetTestPathParamHandler(w http.ResponseWriter, r *http.Request) {
 	mp, err := requester.GetRequestParams(r, nil, requester.TestNameKey)
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "processing request params")
-		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
+		responder.SendJSONError(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -43,7 +43,7 @@ func GetTestQueryParamHandler(w http.ResponseWriter, r *http.Request) {
 	err := requester.GetQueryParams(r, pName)
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "getting query params")
-		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
+		responder.SendJSONError(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -60,6 +60,6 @@ func GetTestErrorHandler(w http.ResponseWriter, r *http.Request) {
 	funcTag := "GetTestErrorHandler"
 
 	err := apierr.Errorf(nil, funcTag, "TEST")
-	responder.SendJSONHttpError(w, http.StatusBadRequest, err)
+	responder.SendJSONError(w, http.StatusBadRequest, err)
 	return
 }

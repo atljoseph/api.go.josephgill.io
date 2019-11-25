@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-// SendHTTPError sends an error back to the client in a structured fashion
+// SendHTTPError sends an error back as text
 func SendHTTPError(w http.ResponseWriter, statusCode int, errText string) {
 	funcTag := "SendJSONError"
 
@@ -15,8 +15,8 @@ func SendHTTPError(w http.ResponseWriter, statusCode int, errText string) {
 	http.Error(w, errText, statusCode)
 }
 
-// SendJSONHttpError sends an error back to the client in a structured fashion
-func SendJSONHttpError(w http.ResponseWriter, statusCode int, stackedError error) {
+// SendJSONError sends an error back as a JSON
+func SendJSONError(w http.ResponseWriter, statusCode int, stackedError error) {
 	funcTag := "SendJSONError"
 
 	// log message

@@ -26,7 +26,7 @@ func PostPhotoAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	txo, err := photoDB.NewTxO("Test User")
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "open db transaction")
-		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
+		responder.SendJSONError(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -36,7 +36,7 @@ func PostPhotoAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	err = txo.RollbackOnError(err)
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "create photo album")
-		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
+		responder.SendJSONError(w, http.StatusBadRequest, err)
 		return
 	}
 	//
@@ -45,7 +45,7 @@ func PostPhotoAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	err = txo.Commit()
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "commit db transaction")
-		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
+		responder.SendJSONError(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -70,7 +70,7 @@ func GetPhotoAlbumsHandler(w http.ResponseWriter, r *http.Request) {
 	albums, err := photoDB.GetPhotoAlbums()
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "get photo albums")
-		responder.SendJSONHttpError(w, http.StatusBadRequest, err)
+		responder.SendJSONError(w, http.StatusBadRequest, err)
 		return
 	}
 

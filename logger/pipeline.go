@@ -6,14 +6,15 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// TODO: pipe the logger data to external source
+// satisfy the logrus logging hook
+type externalLoggingHook struct{}
 
-type externalLoggingHook struct {
-}
-
+// this is in the interface
 func (elh externalLoggingHook) Levels() []logrus.Level {
 	return logrus.AllLevels
 }
+
+// this is in the interface, too
 func (elh externalLoggingHook) Fire(entry *logrus.Entry) error {
 	// non-blocking call
 	go func() {
@@ -26,14 +27,4 @@ func (elh externalLoggingHook) Fire(entry *logrus.Entry) error {
 		fmt.Printf("SENDING TO DATADOG ==> \n%+v\n", entry)
 	}()
 	return nil
-}
-
-// func getLoggingHook() *.logrus.Hook  {
-// 	return new logrus.Hook{}
-// }
-
-// sendToPipeline will send data to the logger pipeline
-// will be hooked into a logrus hook
-func sendToPipeline(l *Log) {
-	// send to data dog
 }

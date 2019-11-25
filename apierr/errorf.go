@@ -37,13 +37,16 @@ func formatErrorString(errString string, args []interface{}) string {
 	return es
 }
 
-func composeStackMsg(err error, tag, msg string) string {
-	// err always needs to come last
+func composeStackMsg(err error, funcTag, msg string) string {
 	if err == nil {
-		return fmt.Sprintf("%s (%s)", tag, msg)
+		err = fmt.Errorf("UnknownError")
 	}
 	if len(msg) == 0 {
-		return fmt.Sprintf("%s --> %s", tag, err)
+		msg = "UnspecifiedMessage"
 	}
-	return fmt.Sprintf("%s (%s) --> %s", tag, msg, err)
+	if len(funcTag) == 0 {
+		funcTag = "UnspecifiedFunc"
+	}
+	// err always needs to come last
+	return fmt.Sprintf("%s (%s) --> %s", funcTag, msg, err)
 }

@@ -23,7 +23,7 @@ func Start(router *mux.Router) error {
 	// start server
 	go func() {
 		// log
-		pkgLog.WithFunc(funcTag).WithMessage("Shutting down").Info()
+		pkgLog.WithFunc(funcTag).WithMessage("Starting up").Info()
 
 		// serve
 		err := srv.ListenAndServe()
