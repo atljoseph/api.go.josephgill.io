@@ -9,7 +9,7 @@ func SendHTTPError(w http.ResponseWriter, statusCode int, errText string) {
 	funcTag := "SendJSONError"
 
 	// log message
-	logErrorResponse(funcTag, errText, statusCode)
+	pkgLog.WithFunc(funcTag).WithErrorMessage(errText).WithStatusCode(statusCode).Error()
 
 	// respond with error
 	http.Error(w, errText, statusCode)
@@ -20,7 +20,7 @@ func SendJSONHttpError(w http.ResponseWriter, statusCode int, stackedError error
 	funcTag := "SendJSONError"
 
 	// log message
-	logErrorResponse(funcTag, stackedError.Error(), statusCode)
+	pkgLog.WithFunc(funcTag).WithError(stackedError).WithStatusCode(statusCode).Error()
 
 	// set response headers to be json
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")

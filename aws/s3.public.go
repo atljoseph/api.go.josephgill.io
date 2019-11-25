@@ -14,7 +14,7 @@ import (
 // To do so, requires a relative path to the desired asset
 func S3PublicAssetURL(relativePath string) string {
 	funcTag := "S3PublicAssetURL"
-	logMessage(funcTag, relativePath)
+	pkgLog.WithFunc(funcTag).WithMessage(relativePath)
 	return fmt.Sprintf("%s/%s/%s", config.S3PublicURL, config.S3PublicName, relativePath)
 }
 
@@ -22,8 +22,9 @@ func S3PublicAssetURL(relativePath string) string {
 // TODO: Do more with aws sdk. List Objects, Rename Objects, Delete Objects, Upload New Objects, Upload Existing Objects
 func S3PublicAssetList() {
 	funcTag := "S3PublicAssetList"
+	funcLog := pkgLog.WithFunc(funcTag)
 
-	logMessage(funcTag, "get config and building request")
+	funcLog.WithMessage("get config and building request").Info()
 	cfg := aws.NewConfig().
 		WithRegion(config.S3PublicRegion).
 		WithCredentials(credentials.NewStaticCredentials(config.S3UserID, config.S3UserSecret, ""))
@@ -34,23 +35,23 @@ func S3PublicAssetList() {
 		// MaxKeys: aws.Int64(100),
 	}
 
-	logMessage(funcTag, "getting object list")
+	funcLog.WithMessage("getting object list")
 	result, err := svc.ListObjects(input)
 	if err != nil {
 		if aerr, ok := err.(awserr.Error); ok {
 			switch aerr.Code() {
 			case s3.ErrCodeNoSuchBucket:
-				logError(funcTag, fmt.Errorf("%s: %s", s3.ErrCodeNoSuchBucket, aerr.Error()))
+				funcLog.WithError(fmt.Errorf("%s: %s", s3.ErrCodeNoSuchBucket, aerr.Error())).Error()
 			default:
-				logError(funcTag, aerr)
+				funcLog.WithError(aerr).Error()
 			}
 		} else {
 			// Print the error, cast err to awserr.Error to get the Code and
 			// Message from an error.
-			logError(funcTag, err)
+			funcLog.WithError(err).Error()
 		}
 		return
 	}
 
-	logMessage(funcTag, fmt.Sprintf("found %d results", len(result.Contents)))
+	pkgLog.WithFunc(funcTag).WithMessage(fmt.Sprintf("found %d results", len(result.Contents))).Info()
 }

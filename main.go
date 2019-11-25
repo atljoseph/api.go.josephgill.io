@@ -13,8 +13,7 @@ import (
 )
 
 var err error
-
-const logID = "main"
+var mainLog *logger.Log
 
 func main() {
 	funcTag := "main"
@@ -33,6 +32,7 @@ func main() {
 		log.Fatal(err)
 		// panic(err)
 	}
+	mainLog = logger.ForPackage("main").WithFunc(funcTag)
 
 	// init the aws connectors
 	// singleton package
@@ -45,8 +45,7 @@ func main() {
 	}
 	err = aws.Initialize(awsConfig)
 	if err != nil {
-		logger.EntryWithError(logID, funcTag, err)
-		panic(err)
+		mainLog.WithError(err).Panic()
 	}
 
 	// init the photo db
@@ -61,8 +60,7 @@ func main() {
 	}
 	err = photoDB.Initialize(dbConfig)
 	if err != nil {
-		logger.EntryWithError(logID, funcTag, err)
-		panic(err)
+		mainLog.WithError(err).Panic()
 	}
 
 	// TODO: Write authDB and migration
@@ -72,14 +70,12 @@ func main() {
 		IsProd: *isProd}
 	router, err := routes.Initialize(routesConfig)
 	if err != nil {
-		logger.EntryWithError(logID, funcTag, err)
-		panic(err)
+		mainLog.WithError(err).Panic()
 	}
 
 	// start the go server
 	err = server.Start(router)
 	if err != nil {
-		logger.EntryWithError(logID, funcTag, err)
-		panic(err)
+		mainLog.WithError(err).Panic()
 	}
 }

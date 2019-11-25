@@ -3,7 +3,17 @@ package requester
 import (
 	"net/http"
 	"time"
+
+	"github.com/atljoseph/api.josephgill.io/logger"
 )
+
+func requestFields(r *http.Request, handlerName string) logger.LogFields {
+	return logger.LogFields{
+		"handler": handlerName,
+		"method":  r.Method,
+		"uri":     r.RequestURI,
+	}
+}
 
 // HandleWithLogging handles the request with the destination http.HandlerFunc, wrapped with logging
 func HandleWithLogging(innerHandler http.Handler, name string) http.Handler {
@@ -13,7 +23,7 @@ func HandleWithLogging(innerHandler http.Handler, name string) http.Handler {
 		// or use as a centralized way to handle errors from requests
 
 		// log request start
-		logRequestStart(funcTag, r, name)
+		pkgLog.WithFunc(funcTag).WithFields(requestFields(r, name)).Info()
 
 		// execute the innerHandler
 		start := time.Now()
@@ -21,7 +31,7 @@ func HandleWithLogging(innerHandler http.Handler, name string) http.Handler {
 		duration := time.Since(start)
 
 		// log stats
-		logRequestEnd(funcTag, r, name, duration)
+		pkgLog.WithFunc(funcTag).WithFields(requestFields(r, name)).WithDuration(duration).Info()
 	})
 }
 

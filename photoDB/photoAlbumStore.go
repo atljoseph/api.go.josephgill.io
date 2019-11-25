@@ -10,7 +10,7 @@ import (
 func CreatePhotoAlbum(txo *TxO, album *PhotoAlbum) (*PhotoAlbum, error) {
 	funcTag := "CreatePhotoAlbum"
 
-	logMessage(funcTag, "insert new photo album")
+	pkgLog.WithFunc(funcTag).WithMessage("insert new photo album").Info()
 
 	// build the query
 	query := `
@@ -42,7 +42,7 @@ func CreatePhotoAlbum(txo *TxO, album *PhotoAlbum) (*PhotoAlbum, error) {
 func GetPhotoAlbums() ([]*PhotoAlbum, error) {
 	funcTag := "GetPhotoAlbums"
 
-	logMessage(funcTag, "get all photo albums")
+	pkgLog.WithFunc(funcTag).WithMessage("get all photo albums").Info()
 
 	// query with the dbx object
 	var pas []*PhotoAlbum

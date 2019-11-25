@@ -17,7 +17,7 @@ import (
 func GetRequestParams(r *http.Request, ptrObjToPopulate interface{}, pathKeys ...string) (map[string]string, error) {
 	funcTag := "GetRequestParams"
 
-	logMessage(funcTag, "processing request paramaters")
+	pkgLog.WithFunc(funcTag).WithMessage("processing request paramaters")
 
 	// get muxvars
 	mp, err := buildReqVars(r, pathKeys)

@@ -24,7 +24,7 @@ type QueryParam struct {
 func GetQueryParams(r *http.Request, qps ...*QueryParam) error {
 	funcTag := "GetQueryParams"
 
-	logMessage(funcTag, "getting query parameter values")
+	pkgLog.WithFunc(funcTag).WithMessage("getting query parameter values")
 
 	// get the query params passed in with the request
 	requestQueryParams := r.URL.Query()

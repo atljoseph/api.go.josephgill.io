@@ -14,22 +14,23 @@ import (
 // migrateDB migrates the photos DB, and returns error if failed
 func migrateDB(cx *Config) error {
 	funcTag := "migrateDB"
+	funcLog := pkgLog.WithFunc(funcTag)
 
 	// sum up migrations in a slice
-	logMessage(funcTag, "getting migrations")
+	funcLog.WithMessage("getting migrations").Info()
 	migrations := &migrate.MemoryMigrationSource{
 		Migrations: migrations,
 	}
 
 	// apply migrations
-	logMessage(funcTag, "applying migrations")
+	funcLog.WithMessage("applying migrations").Info()
 	n, err := migrate.Exec(dbx.DB, cx.ConnType, migrations, migrate.Up)
 	if err != nil {
 		return apierr.Errorf(err, funcTag, "applying migrations")
 	}
 
 	// once migrated, the migration will not be reapplied :)
-	logMessage(funcTag, fmt.Sprintf("db migrated with %d migrations", n))
+	funcLog.WithMessage(fmt.Sprintf("db migrated with %d migrations", n)).Info()
 
 	return nil
 }

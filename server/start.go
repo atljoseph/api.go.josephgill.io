@@ -22,7 +22,10 @@ func Start(router *mux.Router) error {
 
 	// start server
 	go func() {
-		logMessage(funcTag, "Shutting down")
+		// log
+		pkgLog.WithFunc(funcTag).WithMessage("Shutting down").Info()
+
+		// serve
 		err := srv.ListenAndServe()
 		// https://github.com/denji/golang-tls
 		// err := http.ListenAndServeTLS(":8080", "https-server.crt", "https-server.key", nil)

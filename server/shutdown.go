@@ -24,6 +24,6 @@ func waitForShutdown(srv *http.Server) {
 	defer cancel()
 	srv.Shutdown(ctx)
 
-	logMessage(funcTag, "Shutting down")
+	pkgLog.WithFunc(funcTag).WithMessage("shutting down").Info()
 	os.Exit(0)
 }

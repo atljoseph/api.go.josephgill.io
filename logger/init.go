@@ -11,6 +11,7 @@ import (
 // private vars
 var err error
 var once sync.Once
+var pkgLog *Log
 
 // Initialize initializes this singleton package
 func Initialize(c *Config) error {
@@ -31,10 +32,13 @@ func Initialize(c *Config) error {
 
 			// Only log the warning severity or above.
 			logrus.SetLevel(logrus.DebugLevel)
+
+			// set up the logger
+			pkgLog = ForPackage("logger")
 		}
 
 		// log things AFTER initialized (above)
-		logMessage(funcTag, "init completed")
+		pkgLog.WithFunc(funcTag).WithMessage("init completed").Info()
 	})
 
 	// return error if any, each and every time this function is called

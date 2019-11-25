@@ -4,13 +4,13 @@ import (
 	"sync"
 
 	"github.com/atljoseph/api.josephgill.io/apierr"
+	"github.com/atljoseph/api.josephgill.io/logger"
 )
 
 // private vars
 var err error
 var once sync.Once
-
-// config for package
+var pkgLog *logger.Log
 var config *Config
 
 // Initialize initializes all a new aws connector package
@@ -20,7 +20,13 @@ func Initialize(c *Config) error {
 
 	// only do this the first time
 	once.Do(func() {
-		logMessage(funcTag, "start")
+
+		// init the logger
+		pkgLog = logger.ForPackage("aws")
+		funcLog := pkgLog.WithFunc(funcTag)
+
+		// log start
+		funcLog.WithMessage("start").Info()
 
 		// merge config with defaults
 		c = c.MergeWithDefaults()
@@ -30,8 +36,8 @@ func Initialize(c *Config) error {
 			config = c
 		}
 
-		// log it
-		logMessage(funcTag, "end")
+		// log end
+		pkgLog.WithFunc(funcTag).WithMessage("end").Info()
 
 		S3PublicAssetList()
 	})

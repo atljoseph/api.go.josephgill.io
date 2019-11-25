@@ -21,7 +21,7 @@ func Errorf(err error, funcTag, errString string, args ...interface{}) error {
 	}
 
 	// log error
-	logError(stackedError)
+	pkgLog.WithFunc(funcTag).WithError(err).Warn()
 
 	return stackedError
 }

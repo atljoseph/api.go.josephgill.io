@@ -10,7 +10,7 @@ import (
 func GetPhotosByAlbumKey(key string) ([]*Photo, error) {
 	funcTag := "GetPhotosByAlbumKey"
 
-	logMessage(funcTag, "get all photos for album")
+	pkgLog.WithFunc(funcTag).WithMessage("get all photos for album").Info()
 
 	// build the query
 	var ps []*Photo
@@ -38,7 +38,7 @@ SELECT p.*
 func CreatePhoto(txo *TxO, photo *Photo) (*Photo, error) {
 	funcTag := "CreatePhoto"
 
-	logMessage(funcTag, "insert new album photo")
+	pkgLog.WithFunc(funcTag).WithMessage("insert new album photo").Info()
 
 	// build the query
 	query := `

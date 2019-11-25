@@ -8,7 +8,7 @@ import (
 func PopulateDB() error {
 	funcTag := "PopulateDB"
 
-	logMessage(funcTag, "populate initial data")
+	pkgLog.WithFunc(funcTag).WithMessage("populate initial data").Info()
 
 	// create a transaction
 	txo, err := NewTxO("Test User")
