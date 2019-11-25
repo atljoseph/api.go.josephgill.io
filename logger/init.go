@@ -33,6 +33,9 @@ func Initialize(c *Config) error {
 			// Only log the warning severity or above.
 			logrus.SetLevel(logrus.DebugLevel)
 
+			// Add Data pipeline hook in a goroutine for non-blocking call
+			logrus.AddHook(externalLoggingHook{})
+
 			// set up the logger
 			pkgLog = ForPackage("logger")
 		}

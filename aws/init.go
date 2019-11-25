@@ -37,7 +37,7 @@ func Initialize(c *Config) error {
 		}
 
 		// log end
-		pkgLog.WithFunc(funcTag).WithMessage("end").Info()
+		funcLog.WithMessage("end").Info()
 
 		S3PublicAssetList()
 	})
