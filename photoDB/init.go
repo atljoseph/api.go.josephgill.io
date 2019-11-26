@@ -1,7 +1,6 @@
 package photoDB
 
 import (
-	"fmt"
 	"sync"
 	"time"
 
@@ -32,13 +31,13 @@ func Initialize(c *Config) error {
 
 		// sleep X seconds to give the db time to warm up if needed
 		funcLog.WithMessage("Sleeping to give db time to warm up").Info()
-		time.Sleep(15 * time.Second)
+		time.Sleep(10 * time.Second)
 
 		// merge config with defaults
 		c = c.MergeWithDefaults()
 
 		// log the config
-		funcLog.WithMessage("initializing db connector").Info()
+		funcLog.WithMessage("start").Info()
 
 		// config the db
 		if err == nil {
@@ -52,16 +51,17 @@ func Initialize(c *Config) error {
 
 		// populate db
 		if err == nil {
-			fmt.Printf("%+v", c)
 			// only if configured
 			if c.populateOnStartBool {
-				funcLog.WithMessage("initializing db connector").Info()
 				// will fail if unique constraint
+				funcLog.WithMessage("populating db because PopulateOnStart is set").Info()
 				err = PopulateDB()
+			} else {
+				funcLog.WithMessage("skipped populating db because PopulateOnStart is not set").Info()
 			}
 		}
 
-		funcLog.WithMessage("db connector initialized").Info()
+		funcLog.WithMessage("end").Info()
 	})
 
 	// return error if any, each and every time this function is called
