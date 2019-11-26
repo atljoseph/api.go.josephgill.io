@@ -18,12 +18,13 @@ func requestFields(r *http.Request, handlerName string) logger.LogFields {
 // HandleWithLogging handles the request with the destination http.HandlerFunc, wrapped with logging
 func HandleWithLogging(innerHandler http.Handler, name string) http.Handler {
 	funcTag := "HandleWithLogging"
+	funcLog := pkgLog.WithFunc(funcTag)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// can use this to log to data pipeline as well
 		// or use as a centralized way to handle errors from requests
 
 		// log request start
-		pkgLog.WithFunc(funcTag).WithFields(requestFields(r, name)).Info()
+		funcLog.WithMessage("request start").WithFields(requestFields(r, name)).Info()
 
 		// execute the innerHandler
 		start := time.Now()
@@ -31,7 +32,7 @@ func HandleWithLogging(innerHandler http.Handler, name string) http.Handler {
 		duration := time.Since(start)
 
 		// log stats
-		pkgLog.WithFunc(funcTag).WithFields(requestFields(r, name)).WithDuration(duration).Info()
+		funcLog.WithMessage("request end").WithFields(requestFields(r, name)).WithDuration(duration).Info()
 	})
 }
 

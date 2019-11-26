@@ -28,6 +28,12 @@ func getRoutes(routesConfig Config) Routes {
 			HandlerFunc: handlers.GetTestErrorHandler,
 		},
 		Route{
+			Name:        "GetPopulateDBHandler",
+			Method:      "GET",
+			Pattern:     fmt.Sprintf("%s/populate/photos", BaseURL),
+			HandlerFunc: handlers.GetPopulateDBHandler,
+		},
+		Route{
 			Name:        "GetPhotoAlbums",
 			Method:      "GET",
 			Pattern:     fmt.Sprintf("%s/albums", BaseURL),

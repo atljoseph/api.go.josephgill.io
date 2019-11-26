@@ -1,6 +1,7 @@
 package photoDB
 
 import (
+	"fmt"
 	"sync"
 	"time"
 
@@ -26,12 +27,12 @@ func Initialize(c *Config) error {
 	once.Do(func() {
 
 		// init the logger
-		pkgLog = logger.ForPackage("aws")
+		pkgLog = logger.ForPackage("photoDB")
 		funcLog := pkgLog.WithFunc(funcTag)
 
 		// sleep X seconds to give the db time to warm up if needed
 		funcLog.WithMessage("Sleeping to give db time to warm up").Info()
-		time.Sleep(10 * time.Second)
+		time.Sleep(15 * time.Second)
 
 		// merge config with defaults
 		c = c.MergeWithDefaults()
@@ -47,6 +48,17 @@ func Initialize(c *Config) error {
 		// apply migrations
 		if err == nil {
 			err = migrateDB(c)
+		}
+
+		// populate db
+		if err == nil {
+			fmt.Printf("%+v", c)
+			// only if configured
+			if c.populateOnStartBool {
+				funcLog.WithMessage("initializing db connector").Info()
+				// will fail if unique constraint
+				err = PopulateDB()
+			}
 		}
 
 		funcLog.WithMessage("db connector initialized").Info()

@@ -15,11 +15,12 @@ func GetPhotosByAlbumKey(key string) ([]*Photo, error) {
 	// build the query
 	var ps []*Photo
 	query := `
-SELECT p.* 
-	FROM photo p 
-	INNER JOIN album a on a.album_id = p.album_id
-	WHERE a.album_key = ?
+SELECT * from photo where album_key = ?
 	`
+	// SELECT p.*
+	// 	FROM photo p
+	// 	INNER JOIN album a on a.album_id = p.album_id
+	// 	WHERE a.album_key = ?
 
 	err = dbx.Select(&ps, query, key)
 	if err != nil {
@@ -42,12 +43,19 @@ func CreatePhoto(txo *TxO, photo *Photo) (*Photo, error) {
 
 	// build the query
 	query := `
-	INSERT INTO photo (album_id, photo_title, photo_description, photo_src) VALUES (
-		:album_id
-		, :photo_title
-		, :photo_description
-		, :photo_src
-	);
+INSERT INTO photo (
+	album_id
+	, album_key
+	, photo_title
+	, photo_description
+	, photo_src
+) VALUES (
+	:album_id
+	, :album_key
+	, :photo_title
+	, :photo_description
+	, :photo_src
+);
 	`
 
 	// get the result

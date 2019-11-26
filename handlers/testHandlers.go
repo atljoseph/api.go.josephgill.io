@@ -15,7 +15,7 @@ type GetTestResponse struct {
 	Test string `json:"test"`
 }
 
-// GetTestPathParamHandler is just a test endpoint
+// GetTestPathParamHandler is a test endpoint that says hello
 func GetTestPathParamHandler(w http.ResponseWriter, r *http.Request) {
 	funcTag := "GetTestPathParamHandler"
 
@@ -35,7 +35,7 @@ func GetTestPathParamHandler(w http.ResponseWriter, r *http.Request) {
 	responder.SendJSON(w, res)
 }
 
-// GetTestQueryParamHandler is just a test endpoint
+// GetTestQueryParamHandler is a test endpoint that says hello
 func GetTestQueryParamHandler(w http.ResponseWriter, r *http.Request) {
 	funcTag := "GetTestQueryParamHandler"
 
@@ -55,7 +55,7 @@ func GetTestQueryParamHandler(w http.ResponseWriter, r *http.Request) {
 	responder.SendJSON(w, res)
 }
 
-// GetTestErrorHandler is just a test endpoint that returns an error
+// GetTestErrorHandler is a test endpoint that returns an error
 func GetTestErrorHandler(w http.ResponseWriter, r *http.Request) {
 	funcTag := "GetTestErrorHandler"
 

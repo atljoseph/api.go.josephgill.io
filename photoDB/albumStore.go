@@ -7,7 +7,7 @@ import (
 )
 
 // CreatePhotoAlbum is just a test right now
-func CreatePhotoAlbum(txo *TxO, album *PhotoAlbum) (*PhotoAlbum, error) {
+func CreatePhotoAlbum(txo *TxO, album *Album) (*Album, error) {
 	funcTag := "CreatePhotoAlbum"
 
 	pkgLog.WithFunc(funcTag).WithMessage("insert new photo album").Info()
@@ -33,19 +33,19 @@ func CreatePhotoAlbum(txo *TxO, album *PhotoAlbum) (*PhotoAlbum, error) {
 	if err != nil {
 		return nil, apierr.Errorf(err, funcTag, "LastInsertId")
 	}
-	album.AlbumID = id
+	album.ID = id
 
 	return album, nil
 }
 
 // GetPhotoAlbums will eventually grab the photo albums the database, or error
-func GetPhotoAlbums() ([]*PhotoAlbum, error) {
+func GetPhotoAlbums() ([]*Album, error) {
 	funcTag := "GetPhotoAlbums"
 
 	pkgLog.WithFunc(funcTag).WithMessage("get all photo albums").Info()
 
 	// query with the dbx object
-	var pas []*PhotoAlbum
+	var pas []*Album
 	query := `
 SELECT * from album
 	`

@@ -57,6 +57,7 @@ func main() {
 		Host:            os.Getenv("PHOTODB_HOST"),
 		Port:            3306,
 		DefaultDatabase: "photos",
+		PopulateOnStart: os.Getenv("PHOTODB_POPULATE_ON_START"),
 	}
 	err = photoDB.Initialize(dbConfig)
 	if err != nil {

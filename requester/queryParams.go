@@ -20,13 +20,14 @@ type QueryParam struct {
 }
 
 // GetQueryParams extracts query parameter values from the request
-// needs work in order to extract slice-valued params
+// TODO: Extract slice-valued query params. use this func, or another func
 func GetQueryParams(r *http.Request, qps ...*QueryParam) error {
 	funcTag := "GetQueryParams"
 
 	pkgLog.WithFunc(funcTag).WithMessage("getting query parameter values")
 
 	// get the query params passed in with the request
+	// this can include query params, if required in the route config, BUT NOT optional ones
 	requestQueryParams := r.URL.Query()
 
 	// loop through all the query params we care about

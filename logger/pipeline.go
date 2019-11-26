@@ -1,8 +1,6 @@
 package logger
 
 import (
-	"fmt"
-
 	"github.com/sirupsen/logrus"
 )
 
@@ -24,7 +22,7 @@ func (elh externalLoggingHook) Fire(entry *logrus.Entry) error {
 		// entry = entry.WithFields(LogFields{"other": "fields"})
 
 		// send to external logging source
-		fmt.Printf("SENDING TO DATADOG ==> \n%+v\n", entry)
+		// fmt.Printf("SENDING TO DATADOG ==> \n%+v\n", entry)
 	}()
 	return nil
 }

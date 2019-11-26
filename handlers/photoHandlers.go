@@ -36,7 +36,7 @@ func PostPhotoAlbumPhotoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// get the albums
+	// create the photo
 	photo, err = photoDB.CreatePhoto(txo, photo)
 	if errTxo := txo.RollbackOnError(err); errTxo != nil {
 		err = apierr.Errorf(err, funcTag, "create photo")

@@ -14,11 +14,11 @@ func PostPhotoAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	funcTag := "PostPhotoAlbumHandler"
 
 	// TODO: Get data from body of the request
-	album := &photoDB.PhotoAlbum{
-		Title:         "Yeah",
-		Description:   "Man",
-		Key:           "main",
-		CoverPhotoSrc: "sam-shortline-candler-grandy-papa-daddy-with-train-12.jpg",
+	album := &photoDB.Album{
+		Title:       "Yeah",
+		Description: "Man",
+		Key:         "main",
+		CoverPhoto:  "sam-shortline-candler-grandy-papa-daddy-with-train-12.jpg",
 	}
 
 	// create a transaction
@@ -30,11 +30,10 @@ func PostPhotoAlbumHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// get the albums
+	// create the album
 	album, err = photoDB.CreatePhotoAlbum(txo, album)
 	// TODO: Handle this with apierr http implementation - apierr.TerminateTxIfError()?
-	err = txo.RollbackOnError(err)
-	if err != nil {
+	if err = txo.RollbackOnError(err); err != nil {
 		err = apierr.Errorf(err, funcTag, "create photo album")
 		responder.SendJSONError(w, http.StatusBadRequest, err)
 		return
@@ -51,7 +50,7 @@ func PostPhotoAlbumHandler(w http.ResponseWriter, r *http.Request) {
 
 	// build the return data
 	res := &GetPhotoAlbumsResponse{}
-	res.PhotoAlbums = []*photoDB.PhotoAlbum{album}
+	res.PhotoAlbums = []*photoDB.Album{album}
 
 	// return
 	responder.SendJSON(w, res)
@@ -59,7 +58,7 @@ func PostPhotoAlbumHandler(w http.ResponseWriter, r *http.Request) {
 
 // GetPhotoAlbumsResponse is the response returned by GetPhotoAlbumsHandler
 type GetPhotoAlbumsResponse struct {
-	PhotoAlbums []*photoDB.PhotoAlbum `json:"albums"`
+	PhotoAlbums []*photoDB.Album `json:"albums"`
 }
 
 // GetPhotoAlbumsHandler gets all photo albums

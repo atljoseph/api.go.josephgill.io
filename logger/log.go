@@ -59,6 +59,20 @@ func (l *Log) WithMessage(message string) *Log {
 	return l
 }
 
+// WithMessagef returns a logger with formatted message
+func (l *Log) WithMessagef(formattedMessage string, args ...interface{}) *Log {
+	if len(args) != 0 {
+		// this if check is to make sure that the error string does not
+		// get mangled, which happens when you run sprintf without any
+		// args.
+		formattedMessage = fmt.Sprintf(formattedMessage, args)
+	}
+	l.entry = l.getEntry().WithFields(LogFields{
+		"message": formattedMessage,
+	})
+	return l
+}
+
 // WithError returns a logger with message from error
 func (l *Log) WithError(err error) *Log {
 	if err == nil {
@@ -66,6 +80,14 @@ func (l *Log) WithError(err error) *Log {
 	}
 	l.entry = l.getEntry().WithFields(LogFields{
 		"error": err,
+	})
+	return l
+}
+
+// WithStruct returns a logger with message from a struct
+func (l *Log) WithStruct(genericStruct interface{}) *Log {
+	l.entry = l.getEntry().WithFields(LogFields{
+		"struct": fmt.Sprintf("%+v", genericStruct),
 	})
 	return l
 }
