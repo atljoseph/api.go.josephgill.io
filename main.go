@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/atljoseph/api.josephgill.io/aws"
+	"github.com/atljoseph/api.josephgill.io/handlers"
 	"github.com/atljoseph/api.josephgill.io/logger"
 	"github.com/atljoseph/api.josephgill.io/photoDB"
 	"github.com/atljoseph/api.josephgill.io/routes"
@@ -68,7 +69,7 @@ func main() {
 
 	// configure the routes
 	routesConfig := &routes.Config{
-		IsProd: *isProd}
+		Routes: handlers.Routes(*isProd)}
 	router, err := routes.Initialize(routesConfig)
 	if err != nil {
 		mainLog.WithError(err).Panic()

@@ -26,10 +26,10 @@ func (cfg *Config) MergeWithDefaults() *Config {
 	}
 	// READ ONLY USER:
 	if strings.EqualFold(cfg.S3UserID, "") {
-		cfg.S3UserID = "AKIA5A6MNRYQMQHB7THS"
+		cfg.S3UserID = "some ID ..."
 	}
 	if strings.EqualFold(cfg.S3UserSecret, "") {
-		cfg.S3UserSecret = "oG/lG+jbvuqhePznEN+uJ90XCiNBx9j7U8jWjxyt"
+		cfg.S3UserSecret = "some SECRET ..."
 	}
 	return cfg
 }

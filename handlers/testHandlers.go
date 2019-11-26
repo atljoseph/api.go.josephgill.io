@@ -20,7 +20,7 @@ func GetTestPathParamHandler(w http.ResponseWriter, r *http.Request) {
 	funcTag := "GetTestPathParamHandler"
 
 	// process request params
-	mp, err := requester.GetRequestParams(r, nil, requester.TestNameKey)
+	mp, err := requester.GetRequestParams(r, nil, routeKeyTestName)
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "processing request params")
 		responder.SendJSONError(w, http.StatusBadRequest, err)
@@ -29,7 +29,7 @@ func GetTestPathParamHandler(w http.ResponseWriter, r *http.Request) {
 
 	// respond
 	res := &GetTestResponse{}
-	res.Test = fmt.Sprintf("Hello, %s\n", mp[requester.TestNameKey])
+	res.Test = fmt.Sprintf("Hello, %s\n", mp[routeKeyTestName])
 
 	// return
 	responder.SendJSON(w, res)
@@ -39,7 +39,7 @@ func GetTestPathParamHandler(w http.ResponseWriter, r *http.Request) {
 func GetTestQueryParamHandler(w http.ResponseWriter, r *http.Request) {
 	funcTag := "GetTestQueryParamHandler"
 
-	pName := &requester.QueryParam{Name: requester.TestNameKey, DefaultValue: "Guest"}
+	pName := &requester.QueryParam{Name: routeKeyTestName, DefaultValue: "Guest"}
 	err := requester.GetQueryParams(r, pName)
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "getting query params")

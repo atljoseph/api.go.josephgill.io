@@ -65,7 +65,7 @@ func GetPhotosByAlbumKeyHandler(w http.ResponseWriter, r *http.Request) {
 	funcTag := "GetPhotosByAlbumKeyHandler"
 
 	// process request params
-	mp, err := requester.GetRequestParams(r, nil, requester.PhotoAlbumIDKey)
+	mp, err := requester.GetRequestParams(r, nil, routeKeyAlbumID)
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "process request params")
 		responder.SendJSONError(w, http.StatusBadRequest, err)
@@ -73,7 +73,7 @@ func GetPhotosByAlbumKeyHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get the photos
-	ps, err := photoDB.GetPhotosByAlbumKey(mp[requester.PhotoAlbumIDKey])
+	ps, err := photoDB.GetPhotosByAlbumKey(mp[routeKeyAlbumID])
 	if err != nil {
 		err = apierr.Errorf(err, funcTag, "get photos by album key")
 		responder.SendJSONError(w, http.StatusBadRequest, err)

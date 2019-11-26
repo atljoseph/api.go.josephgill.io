@@ -11,7 +11,7 @@ import (
 func Initialize(routesConfig *Config) (*mux.Router, error) {
 
 	router := mux.NewRouter().StrictSlash(true)
-	for _, route := range getRoutes(*routesConfig) {
+	for _, route := range routesConfig.Routes {
 		var handler http.Handler
 
 		// Last thing that will be executed is the actual handler function
